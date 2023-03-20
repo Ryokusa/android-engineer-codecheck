@@ -3,21 +3,32 @@
  */
 package jp.co.yumemi.android.code_check
 
+import android.content.Context
+import android.inputmethodservice.InputMethodService
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
 import com.google.android.material.textfield.TextInputEditText
 import jp.co.yumemi.android.code_check.databinding.RepositoriesFragmentBinding
+import kotlinx.coroutines.launch
 
 class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     private val viewModel by viewModels<RepositoriesViewModel>()
+    private val adapter = RepositoryAdapter(object : RepositoryAdapter.OnItemClickListener{
+        override fun repositoryClick(repository: Repository){
+            gotoRepositoryFragment(repository)
+        }
+    })
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
@@ -25,34 +36,50 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
 
         val binding = RepositoriesFragmentBinding.bind(view)
 
-        val adapter = RepositoryAdapter(object : RepositoryAdapter.OnItemClickListener{
-            override fun repositoryClick(repository: Repository){
-                gotoRepositoryFragment(repository)
-            }
-        })
-
         adapter.submitList(viewModel.repositories)
 
         val searchInputText = binding.searchInputText
-        initSearchInputText(searchInputText, adapter)
+        initSearchInputText(searchInputText)
 
         val repositoriesRecycler = binding.repositoriesRecycler
-        initRepositoriesRecycler(repositoriesRecycler, adapter)
+        initRepositoriesRecycler(repositoriesRecycler)
     }
 
-    private fun initSearchInputText(searchInputText: TextInputEditText, adapter: RepositoryAdapter){
+    private fun search(searchText: String){
+        viewModel.resetRepositories()
+        lifecycleScope.launch{
+            try {
+                val searchResults = viewModel.repositoriesSearch(searchText)
+                adapter.submitList(searchResults)
+            }catch (e: Exception){
+                Toast.makeText(context, "エラー：検索できませんでした", Toast.LENGTH_SHORT).show()
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun initSearchInputText(searchInputText: TextInputEditText){
         searchInputText.setOnEditorActionListener{ editText, action, _ ->
                 if (action == EditorInfo.IME_ACTION_SEARCH){
+                    hideSoftKeyBoard(editText)
+                    editText.clearFocus()
                     val searchText = editText.text.toString()
-                    val searchResults = viewModel.repositoriesSearch(searchText)
-                    adapter.submitList(searchResults)
+                    search(searchText)
                     return@setOnEditorActionListener true
                 }
                 return@setOnEditorActionListener false
             }
     }
 
-    private fun initRepositoriesRecycler(repositoriesRecycler: RecyclerView, adapter: RepositoryAdapter){
+    private fun hideSoftKeyBoard(currentFocus: View){
+        val inputMethodService = requireContext().getSystemService(InputMethodManager::class.java)
+        inputMethodService.hideSoftInputFromWindow(
+            currentFocus.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS,
+        )
+    }
+
+    private fun initRepositoriesRecycler(repositoriesRecycler: RecyclerView){
         val context = requireContext()
         val layoutManager = LinearLayoutManager(context)
         val dividerItemDecoration =

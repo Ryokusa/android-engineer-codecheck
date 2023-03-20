@@ -12,9 +12,7 @@ import io.ktor.client.engine.android.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import jp.co.yumemi.android.code_check.MainActivity.Companion.lastSearchDate
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import kotlinx.parcelize.Parcelize
 import org.json.JSONObject
 import java.util.*
@@ -30,14 +28,14 @@ class RepositoriesViewModel(
         get() = _repositories
 
     // 検索結果
-    fun repositoriesSearch(inputText: String): List<Repository> = runBlocking {
-        return@runBlocking GlobalScope.async {
-            _repositories = getRepositories(inputText)
+    suspend fun repositoriesSearch(inputText: String): List<Repository> =  withContext(Dispatchers.IO){
+        if (inputText == "") return@withContext listOf()
 
-            lastSearchDate = Date()
+        _repositories = getRepositories(inputText)
 
-            return@async _repositories
-        }.await()
+        lastSearchDate = Date()
+
+        return@withContext _repositories
     }
 
     private suspend fun getRepositories(inputText: String): List<Repository> {
@@ -50,6 +48,10 @@ class RepositoriesViewModel(
 
         val jsonBody = JSONObject(response.receive<String>())
         return jsonBody2Repositories(jsonBody)
+    }
+
+    fun resetRepositories() {
+        _repositories = listOf()
     }
 
     private fun jsonBody2Repositories(jsonBody: JSONObject):List<Repository>  {
