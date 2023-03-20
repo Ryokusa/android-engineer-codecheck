@@ -36,10 +36,10 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         adapter.submitList(viewModel.repositories)
 
         val searchInputText = binding.searchInputText
-        initSearchInputText(searchInputText, adapter)
+        initSearchInputText(searchInputText)
 
         val repositoriesRecycler = binding.repositoriesRecycler
-        initRepositoriesRecycler(repositoriesRecycler, adapter)
+        initRepositoriesRecycler(repositoriesRecycler)
     }
 
     private fun search(searchText: String){
@@ -54,7 +54,7 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         }
     }
 
-    private fun initSearchInputText(searchInputText: TextInputEditText, adapter: RepositoryAdapter){
+    private fun initSearchInputText(searchInputText: TextInputEditText){
         searchInputText.setOnEditorActionListener{ editText, action, _ ->
                 if (action == EditorInfo.IME_ACTION_SEARCH){
                     val searchText = editText.text.toString()
@@ -65,7 +65,7 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
             }
     }
 
-    private fun initRepositoriesRecycler(repositoriesRecycler: RecyclerView, adapter: RepositoryAdapter){
+    private fun initRepositoriesRecycler(repositoriesRecycler: RecyclerView){
         val context = requireContext()
         val layoutManager = LinearLayoutManager(context)
         val dividerItemDecoration =
