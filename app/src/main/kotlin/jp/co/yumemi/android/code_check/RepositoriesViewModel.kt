@@ -61,7 +61,8 @@ class RepositoriesViewModel(
 
     private fun jsonObject2Item(jsonItem: JSONObject): Item {
         val name = jsonItem.optString("full_name")
-        val ownerIconUrl = jsonItem.optJSONObject("owner")!!.optString("avatar_url")
+        val ownerIconUrl = jsonItem.optJSONObject("owner")?.optString("avatar_url")
+            ?: throw Error("'owner' can't get from json")
         val language = jsonItem.optString("language")
         val stargazersCount = jsonItem.optLong("stargazers_count")
         val watchersCount = jsonItem.optLong("watchers_count")
