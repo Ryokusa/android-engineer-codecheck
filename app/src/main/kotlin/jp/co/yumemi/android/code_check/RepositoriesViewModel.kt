@@ -16,7 +16,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import kotlinx.parcelize.Parcelize
-import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
 
@@ -36,8 +35,9 @@ class RepositoriesViewModel(
     }
 
     private suspend fun getItems(inputText: String): List<Item> {
+        //TODO: 例外処理
         val client = HttpClient(Android)
-        val response: HttpResponse = client?.get("https://api.github.com/search/repositories") {
+        val response: HttpResponse = client.get("https://api.github.com/search/repositories") {
             header("Accept", "application/vnd.github.v3+json")
             parameter("q", inputText)
         }
@@ -47,10 +47,11 @@ class RepositoriesViewModel(
     }
 
     private fun jsonBody2Items(jsonBody: JSONObject):List<Item>  {
-        val jsonItems = jsonBody.optJSONArray("items")!!
+        val jsonItems = jsonBody.optJSONArray("items") ?: throw Error("items can't get from json")
+
         val items = mutableListOf<Item>()
         for (i in 0 until jsonItems.length()) {
-            val jsonItem = jsonItems.optJSONObject(i)!!
+            val jsonItem = jsonItems.optJSONObject(i)
             val item = jsonObject2Item(jsonItem)
             items.add(item)
         }
@@ -60,7 +61,8 @@ class RepositoriesViewModel(
 
     private fun jsonObject2Item(jsonItem: JSONObject): Item {
         val name = jsonItem.optString("full_name")
-        val ownerIconUrl = jsonItem.optJSONObject("owner")!!.optString("avatar_url")
+        val ownerIconUrl = jsonItem.optJSONObject("owner")?.optString("avatar_url")
+            ?: throw Error("'owner' can't get from json")
         val language = jsonItem.optString("language")
         val stargazersCount = jsonItem.optLong("stargazers_count")
         val watchersCount = jsonItem.optLong("watchers_count")

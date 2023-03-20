@@ -37,7 +37,8 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     }
 
     private fun initSearchInputText(searchInputText: TextInputEditText, adapter: ItemAdapter){
-        val viewModel = RepositoriesViewModel(context!!)
+        val context = requireContext()
+        val viewModel = RepositoriesViewModel(context)
         searchInputText.setOnEditorActionListener{ editText, action, _ ->
                 if (action == EditorInfo.IME_ACTION_SEARCH){
                     val searchText = editText.text.toString()
@@ -50,9 +51,10 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     }
 
     private fun initRepositoriesRecycler(repositoriesRecycler: RecyclerView, adapter: ItemAdapter){
-        val layoutManager = LinearLayoutManager(context!!)
+        val context = requireContext()
+        val layoutManager = LinearLayoutManager(context)
         val dividerItemDecoration =
-            DividerItemDecoration(context!!, layoutManager.orientation)
+            DividerItemDecoration(context, layoutManager.orientation)
 
         repositoriesRecycler.also{
             it.layoutManager = layoutManager
@@ -101,10 +103,12 @@ class ItemAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int)
     {
     	val item = getItem(position)
-        (holder.itemView.findViewById(R.id.repository_name_view) as TextView).text =
-            item.name
+        val itemView = holder.itemView
 
-        holder.itemView.setOnClickListener{
+        val repositoryNameView = itemView.findViewById<TextView>(R.id.repository_name_view)
+        repositoryNameView.text = item.name
+
+        itemView.setOnClickListener{
      		itemClickListener.itemClick(item)
     	}
     }

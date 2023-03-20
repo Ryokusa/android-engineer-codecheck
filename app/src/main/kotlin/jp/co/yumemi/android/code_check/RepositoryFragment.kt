@@ -23,7 +23,7 @@ class RepositoryFragment : Fragment(R.layout.repository_fragment) {
 
         val binding = RepositoryFragmentBinding.bind(view)
 
-        var item = args.Item
+        val item = args.Item
 
         binding.ownerIconView.load(item.ownerIconUrl);
         binding.nameView.text = item.name;
