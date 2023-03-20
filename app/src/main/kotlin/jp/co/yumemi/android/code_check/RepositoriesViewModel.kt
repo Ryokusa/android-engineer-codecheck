@@ -50,6 +50,10 @@ class RepositoriesViewModel(
         return jsonBody2Repositories(jsonBody)
     }
 
+    fun resetRepositories() {
+        _repositories = listOf()
+    }
+
     private fun jsonBody2Repositories(jsonBody: JSONObject):List<Repository>  {
         val jsonRepositories = jsonBody.optJSONArray("items") ?: throw Error("'items' can't get from json")
 

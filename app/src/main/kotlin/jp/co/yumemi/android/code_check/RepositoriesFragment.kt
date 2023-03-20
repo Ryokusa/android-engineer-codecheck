@@ -43,6 +43,7 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     }
 
     private fun search(searchText: String){
+        viewModel.resetRepositories()
         lifecycleScope.launch{
             try {
                 val searchResults = viewModel.repositoriesSearch(searchText)
