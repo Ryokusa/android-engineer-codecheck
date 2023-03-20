@@ -33,7 +33,7 @@ class RepositoriesViewModel(
     fun repositoriesSearch(inputText: String): List<Repository> = runBlocking {
         if (inputText == "") return@runBlocking listOf()
 
-        return@runBlocking GlobalScope.async {
+        return@runBlocking async {
             _repositories = getRepositories(inputText)
 
             lastSearchDate = Date()
