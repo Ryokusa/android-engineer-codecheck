@@ -31,6 +31,8 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
             }
         })
 
+        adapter.submitList(viewModel.repositories)
+
         val searchInputText = binding.searchInputText
         initSearchInputText(searchInputText, adapter)
 
