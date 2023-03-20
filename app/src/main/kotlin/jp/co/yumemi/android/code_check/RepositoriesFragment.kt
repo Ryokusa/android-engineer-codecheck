@@ -23,9 +23,9 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
 
         val binding = RepositoriesFragmentBinding.bind(view)
 
-        val adapter = ItemAdapter(object : ItemAdapter.OnItemClickListener{
-            override fun itemClick(item: Item){
-                gotoRepositoryFragment(item)
+        val adapter = RepositoryAdapter(object : RepositoryAdapter.OnItemClickListener{
+            override fun repositoryClick(repository: Repository){
+                gotoRepositoryFragment(repository)
             }
         })
 
@@ -36,7 +36,7 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         initRepositoriesRecycler(repositoriesRecycler, adapter)
     }
 
-    private fun initSearchInputText(searchInputText: TextInputEditText, adapter: ItemAdapter){
+    private fun initSearchInputText(searchInputText: TextInputEditText, adapter: RepositoryAdapter){
         val context = requireContext()
         val viewModel = RepositoriesViewModel(context)
         searchInputText.setOnEditorActionListener{ editText, action, _ ->
@@ -50,7 +50,7 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
             }
     }
 
-    private fun initRepositoriesRecycler(repositoriesRecycler: RecyclerView, adapter: ItemAdapter){
+    private fun initRepositoriesRecycler(repositoriesRecycler: RecyclerView, adapter: RepositoryAdapter){
         val context = requireContext()
         val layoutManager = LinearLayoutManager(context)
         val dividerItemDecoration =
@@ -63,53 +63,53 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         }
     }
 
-    fun gotoRepositoryFragment(item: Item)
+    fun gotoRepositoryFragment(repository: Repository)
     {
         val action = RepositoriesFragmentDirections
-            .actionRepositoriesFragmentToRepositoryFragment(item)
+            .actionRepositoriesFragmentToRepositoryFragment(repository)
         findNavController().navigate(action)
     }
 }
 
-val diffUtil = object: DiffUtil.ItemCallback<Item>(){
-    override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean
+val diffUtil = object: DiffUtil.ItemCallback<Repository>(){
+    override fun areItemsTheSame(oldRepository: Repository, newRepository: Repository): Boolean
     {
-        return oldItem.name == newItem.name
+        return oldRepository.name == newRepository.name
     }
 
-    override fun areContentsTheSame(oldItem: Item, newItem: Item): Boolean
+    override fun areContentsTheSame(oldRepository: Repository, newRepository: Repository): Boolean
     {
-        return oldItem == newItem
+        return oldRepository == newRepository
     }
 }
 
-class ItemAdapter(
-    private val itemClickListener: OnItemClickListener,
-) : ListAdapter<Item, ItemAdapter.ViewHolder>(diffUtil){
+class RepositoryAdapter(
+    private val repositoryClickListener: OnItemClickListener,
+) : ListAdapter<Repository, RepositoryAdapter.ViewHolder>(diffUtil){
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view)
 
     interface OnItemClickListener{
-    	fun itemClick(item: Item)
+    	fun repositoryClick(repository: Repository)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
     {
     	val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.layout_item, parent, false)
+            .inflate(R.layout.repository_layout, parent, false)
     	return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int)
     {
-    	val item = getItem(position)
+    	val repository = getItem(position)
         val itemView = holder.itemView
 
         val repositoryNameView = itemView.findViewById<TextView>(R.id.repository_name_view)
-        repositoryNameView.text = item.name
+        repositoryNameView.text = repository.name
 
         itemView.setOnClickListener{
-     		itemClickListener.itemClick(item)
+     		repositoryClickListener.repositoryClick(repository)
     	}
     }
 }
