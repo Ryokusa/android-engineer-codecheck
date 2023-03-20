@@ -3,8 +3,10 @@
  */
 package jp.co.yumemi.android.code_check
 
+import android.app.Application
 import android.content.Context
 import android.os.Parcelable
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -20,17 +22,23 @@ import org.json.JSONObject
 import java.util.*
 
 class RepositoriesViewModel(
-    val context: Context
-) : ViewModel() {
+    application: Application
+) : AndroidViewModel(application) {
+
+    private val context = application
+
+    private var _repositories = listOf<Repository>()
+    val repositories: List<Repository>
+        get() = _repositories
 
     // 検索結果
     fun repositoriesSearch(inputText: String): List<Repository> = runBlocking {
         return@runBlocking GlobalScope.async {
-            val items = getItems(inputText)
+            _repositories = getItems(inputText)
 
             lastSearchDate = Date()
 
-            return@async items
+            return@async _repositories
         }.await()
     }
 

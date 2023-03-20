@@ -10,12 +10,14 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
 import com.google.android.material.textfield.TextInputEditText
 import jp.co.yumemi.android.code_check.databinding.RepositoriesFragmentBinding
 
 class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
+    private val viewModel by viewModels<RepositoriesViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
@@ -29,6 +31,8 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
             }
         })
 
+        adapter.submitList(viewModel.repositories)
+
         val searchInputText = binding.searchInputText
         initSearchInputText(searchInputText, adapter)
 
@@ -37,8 +41,6 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     }
 
     private fun initSearchInputText(searchInputText: TextInputEditText, adapter: RepositoryAdapter){
-        val context = requireContext()
-        val viewModel = RepositoriesViewModel(context)
         searchInputText.setOnEditorActionListener{ editText, action, _ ->
                 if (action == EditorInfo.IME_ACTION_SEARCH){
                     val searchText = editText.text.toString()
