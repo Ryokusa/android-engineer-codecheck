@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -47,8 +48,13 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
                 if (action == EditorInfo.IME_ACTION_SEARCH){
                     val searchText = editText.text.toString()
                     lifecycleScope.launch{
-                        val searchResults = viewModel.repositoriesSearch(searchText)
-                        adapter.submitList(searchResults)
+                        try {
+                            val searchResults = viewModel.repositoriesSearch(searchText)
+                            adapter.submitList(searchResults)
+                        }catch (e: Exception){
+                            Toast.makeText(context, "エラー：検索できませんでした", Toast.LENGTH_SHORT).show()
+                            e.printStackTrace()
+                        }
                     }
                     return@setOnEditorActionListener true
                 }
