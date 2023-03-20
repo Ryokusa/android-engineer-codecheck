@@ -16,6 +16,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import kotlinx.parcelize.Parcelize
+import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
 
@@ -35,19 +36,23 @@ class RepositoriesViewModel(
 
             val jsonBody = JSONObject(response.receive<String>())
             val jsonItems = jsonBody.optJSONArray("items")!!
-
-            val items = mutableListOf<Item>()
-
-            for (i in 0 until jsonItems.length()) {
-                val jsonItem = jsonItems.optJSONObject(i)!!
-                val item = json2Item(jsonItem)
-                items.add(item)
-            }
+            val items = jsonArray2Items(jsonItems)
 
             lastSearchDate = Date()
 
-            return@async items.toList()
+            return@async items
         }.await()
+    }
+
+    private fun jsonArray2Items(jsonItems: JSONArray):List<Item>  {
+        val items = mutableListOf<Item>()
+        for (i in 0 until jsonItems.length()) {
+            val jsonItem = jsonItems.optJSONObject(i)!!
+            val item = json2Item(jsonItem)
+            items.add(item)
+        }
+
+        return items.toList()
     }
 
     private fun json2Item(jsonItem: JSONObject): Item {
