@@ -97,7 +97,7 @@ class CustomAdapter(
         (holder.itemView.findViewById<View>(R.id.repositoryNameView) as TextView).text =
             item.name
 
-    	holder.itemView.setOnClickListener{
+        holder.itemView.setOnClickListener{
      		itemClickListener.itemClick(item)
     	}
     }
