@@ -8,10 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
+import com.google.android.material.textfield.TextInputEditText
 import jp.co.yumemi.android.code_check.databinding.RepositoriesFragmentBinding
 
 class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
@@ -22,19 +24,22 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
 
         val binding = RepositoriesFragmentBinding.bind(view)
 
-        val viewModel = RepositoryViewModel(context!!)
-
-        val layoutManager = LinearLayoutManager(context!!)
-        val dividerItemDecoration =
-            DividerItemDecoration(context!!, layoutManager.orientation)
         val adapter = ItemAdapter(object : ItemAdapter.OnItemClickListener{
             override fun itemClick(item: Item){
                 gotoRepositoryFragment(item)
             }
         })
 
-        binding.searchInputText
-            .setOnEditorActionListener{ editText, action, _ ->
+        val searchInputText = binding.searchInputText
+        initSearchInputText(searchInputText, adapter)
+
+        val recyclerView = binding.recyclerView
+        initRecyclerView(recyclerView, adapter)
+    }
+
+    private fun initSearchInputText(searchInputText: TextInputEditText, adapter: ItemAdapter){
+        val viewModel = RepositoryViewModel(context!!)
+        searchInputText.setOnEditorActionListener{ editText, action, _ ->
                 if (action == EditorInfo.IME_ACTION_SEARCH){
                     val searchText = editText.text.toString()
                     val searchResults = viewModel.searchResults(searchText)
@@ -43,8 +48,14 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
                 }
                 return@setOnEditorActionListener false
             }
+    }
 
-        binding.recyclerView.also{
+    private fun initRecyclerView(recyclerView: RecyclerView, adapter: ItemAdapter){
+        val layoutManager = LinearLayoutManager(context!!)
+        val dividerItemDecoration =
+            DividerItemDecoration(context!!, layoutManager.orientation)
+
+        recyclerView.also{
             it.layoutManager = layoutManager
             it.addItemDecoration(dividerItemDecoration)
             it.adapter = adapter
