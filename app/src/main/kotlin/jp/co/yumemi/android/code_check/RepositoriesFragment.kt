@@ -32,8 +32,8 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         val searchInputText = binding.searchInputText
         initSearchInputText(searchInputText, adapter)
 
-        val recyclerView = binding.recyclerView
-        initRecyclerView(recyclerView, adapter)
+        val repositoriesRecycler = binding.repositoriesRecycler
+        initRepositoriesRecycler(repositoriesRecycler, adapter)
     }
 
     private fun initSearchInputText(searchInputText: TextInputEditText, adapter: ItemAdapter){
@@ -49,12 +49,12 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
             }
     }
 
-    private fun initRecyclerView(recyclerView: RecyclerView, adapter: ItemAdapter){
+    private fun initRepositoriesRecycler(repositoriesRecycler: RecyclerView, adapter: ItemAdapter){
         val layoutManager = LinearLayoutManager(context!!)
         val dividerItemDecoration =
             DividerItemDecoration(context!!, layoutManager.orientation)
 
-        recyclerView.also{
+        repositoriesRecycler.also{
             it.layoutManager = layoutManager
             it.addItemDecoration(dividerItemDecoration)
             it.adapter = adapter
