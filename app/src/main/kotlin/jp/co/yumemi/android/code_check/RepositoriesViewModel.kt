@@ -4,6 +4,7 @@
 package jp.co.yumemi.android.code_check
 
 import android.app.Application
+import android.os.Message
 import android.os.Parcelable
 import androidx.lifecycle.AndroidViewModel
 import io.ktor.client.*
@@ -14,6 +15,7 @@ import io.ktor.client.statement.*
 import jp.co.yumemi.android.code_check.MainActivity.Companion.lastSearchDate
 import kotlinx.coroutines.*
 import kotlinx.parcelize.Parcelize
+import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
 
@@ -53,8 +55,9 @@ class RepositoriesViewModel(
         _repositories = listOf()
     }
 
+
     private fun jsonBody2Repositories(jsonBody: JSONObject):List<Repository>  {
-        val jsonRepositories = jsonBody.optJSONArray("items") ?: throw Error("'items' can't get from json")
+        val jsonRepositories = jsonBody.optJSONArray("items") ?: throw JSONException("'items' can't get from json")
 
         val repositories = mutableListOf<Repository>()
         for (i in 0 until jsonRepositories.length()) {
@@ -69,7 +72,7 @@ class RepositoriesViewModel(
     private fun jsonObject2Repository(jsonRepository: JSONObject): Repository {
         val name = jsonRepository.optString("full_name")
         val ownerIconUrl = jsonRepository.optJSONObject("owner")?.optString("avatar_url")
-            ?: throw Error("'owner' can't get from json")
+            ?: ""
         val language = jsonRepository.optString("language")
         val stargazersCount = jsonRepository.optLong("stargazers_count")
         val watchersCount = jsonRepository.optLong("watchers_count")
