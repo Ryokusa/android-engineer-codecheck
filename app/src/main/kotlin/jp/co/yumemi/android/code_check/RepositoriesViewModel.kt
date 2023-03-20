@@ -24,7 +24,7 @@ class RepositoriesViewModel(
 ) : ViewModel() {
 
     // 検索結果
-    fun repositoriesSearch(inputText: String): List<Item> = runBlocking {
+    fun repositoriesSearch(inputText: String): List<Repository> = runBlocking {
         return@runBlocking GlobalScope.async {
             val items = getItems(inputText)
 
@@ -34,7 +34,7 @@ class RepositoriesViewModel(
         }.await()
     }
 
-    private suspend fun getItems(inputText: String): List<Item> {
+    private suspend fun getItems(inputText: String): List<Repository> {
         //TODO: 例外処理
         val client = HttpClient(Android)
         val response: HttpResponse = client.get("https://api.github.com/search/repositories") {
@@ -46,20 +46,20 @@ class RepositoriesViewModel(
         return jsonBody2Items(jsonBody)
     }
 
-    private fun jsonBody2Items(jsonBody: JSONObject):List<Item>  {
+    private fun jsonBody2Items(jsonBody: JSONObject):List<Repository>  {
         val jsonItems = jsonBody.optJSONArray("items") ?: throw Error("items can't get from json")
 
-        val items = mutableListOf<Item>()
+        val repositories = mutableListOf<Repository>()
         for (i in 0 until jsonItems.length()) {
             val jsonItem = jsonItems.optJSONObject(i)
             val item = jsonObject2Item(jsonItem)
-            items.add(item)
+            repositories.add(item)
         }
 
-        return items.toList()
+        return repositories.toList()
     }
 
-    private fun jsonObject2Item(jsonItem: JSONObject): Item {
+    private fun jsonObject2Item(jsonItem: JSONObject): Repository {
         val name = jsonItem.optString("full_name")
         val ownerIconUrl = jsonItem.optJSONObject("owner")?.optString("avatar_url")
             ?: throw Error("'owner' can't get from json")
@@ -69,7 +69,7 @@ class RepositoriesViewModel(
         val forksCount = jsonItem.optLong("forks_count")
         val openIssuesCount = jsonItem.optLong("open_issues_count")
 
-        return Item(
+        return Repository(
             name,
             ownerIconUrl,
             context.getString(R.string.written_language, language),
@@ -82,7 +82,7 @@ class RepositoriesViewModel(
 }
 
 @Parcelize
-data class Item(
+data class Repository(
     val name: String,
     val ownerIconUrl: String,
     val language: String,
