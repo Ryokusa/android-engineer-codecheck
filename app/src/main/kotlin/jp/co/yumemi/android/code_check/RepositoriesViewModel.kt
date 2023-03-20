@@ -48,14 +48,14 @@ class RepositoriesViewModel(
         val items = mutableListOf<Item>()
         for (i in 0 until jsonItems.length()) {
             val jsonItem = jsonItems.optJSONObject(i)!!
-            val item = json2Item(jsonItem)
+            val item = jsonObject2Item(jsonItem)
             items.add(item)
         }
 
         return items.toList()
     }
 
-    private fun json2Item(jsonItem: JSONObject): Item {
+    private fun jsonObject2Item(jsonItem: JSONObject): Item {
         val name = jsonItem.optString("full_name")
         val ownerIconUrl = jsonItem.optJSONObject("owner")!!.optString("avatar_url")
         val language = jsonItem.optString("language")
