@@ -26,22 +26,27 @@ class RepositoriesViewModel(
 
     // 検索結果
     fun repositoriesSearch(inputText: String): List<Item> = runBlocking {
-        val client = HttpClient(Android)
+
 
         return@runBlocking GlobalScope.async {
-            val response: HttpResponse = client?.get("https://api.github.com/search/repositories") {
-                header("Accept", "application/vnd.github.v3+json")
-                parameter("q", inputText)
-            }
-
-            val jsonBody = JSONObject(response.receive<String>())
-            val jsonItems = jsonBody.optJSONArray("items")!!
-            val items = jsonArray2Items(jsonItems)
+            val items = getItems(inputText)
 
             lastSearchDate = Date()
 
             return@async items
         }.await()
+    }
+
+    private suspend fun getItems(inputText: String): List<Item> {
+        val client = HttpClient(Android)
+        val response: HttpResponse = client?.get("https://api.github.com/search/repositories") {
+            header("Accept", "application/vnd.github.v3+json")
+            parameter("q", inputText)
+        }
+
+        val jsonBody = JSONObject(response.receive<String>())
+        val jsonItems = jsonBody.optJSONArray("items")!!
+        return jsonArray2Items(jsonItems)
     }
 
     private fun jsonArray2Items(jsonItems: JSONArray):List<Item>  {
