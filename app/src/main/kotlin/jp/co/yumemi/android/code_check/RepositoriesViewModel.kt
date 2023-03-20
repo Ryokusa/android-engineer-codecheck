@@ -24,7 +24,7 @@ class RepositoriesViewModel(
 ) : ViewModel() {
 
     // 検索結果
-    fun searchResults(inputText: String): List<Item> = runBlocking {
+    fun repositoriesSearch(inputText: String): List<Item> = runBlocking {
         val client = HttpClient(Android)
 
         return@runBlocking GlobalScope.async {
