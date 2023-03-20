@@ -19,7 +19,7 @@ import kotlinx.parcelize.Parcelize
 import org.json.JSONObject
 import java.util.*
 
-class RepositoryViewModel(
+class RepositoriesViewModel(
     val context: Context
 ) : ViewModel() {
 

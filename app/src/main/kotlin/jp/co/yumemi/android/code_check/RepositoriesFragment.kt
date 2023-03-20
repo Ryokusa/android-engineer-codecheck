@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -38,7 +37,7 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     }
 
     private fun initSearchInputText(searchInputText: TextInputEditText, adapter: ItemAdapter){
-        val viewModel = RepositoryViewModel(context!!)
+        val viewModel = RepositoriesViewModel(context!!)
         searchInputText.setOnEditorActionListener{ editText, action, _ ->
                 if (action == EditorInfo.IME_ACTION_SEARCH){
                     val searchText = editText.text.toString()
@@ -103,7 +102,7 @@ class ItemAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int)
     {
     	val item = getItem(position)
-        (holder.itemView.findViewById<View>(R.id.repositoryNameView) as TextView).text =
+        (holder.itemView.findViewById(R.id.repositoryNameView) as TextView).text =
             item.name
 
         holder.itemView.setOnClickListener{
