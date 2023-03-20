@@ -26,8 +26,6 @@ class RepositoriesViewModel(
 
     // 検索結果
     fun repositoriesSearch(inputText: String): List<Item> = runBlocking {
-
-
         return@runBlocking GlobalScope.async {
             val items = getItems(inputText)
 
