@@ -27,14 +27,18 @@ class RepositoriesViewModel(
 
     private val context = application
 
+    private var _repositories = listOf<Repository>()
+    val repositories: List<Repository>
+        get() = _repositories
+
     // 検索結果
     fun repositoriesSearch(inputText: String): List<Repository> = runBlocking {
         return@runBlocking GlobalScope.async {
-            val items = getItems(inputText)
+            _repositories = getItems(inputText)
 
             lastSearchDate = Date()
 
-            return@async items
+            return@async _repositories
         }.await()
     }
 
