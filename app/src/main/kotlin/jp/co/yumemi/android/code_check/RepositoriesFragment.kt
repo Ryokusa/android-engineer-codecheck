@@ -21,18 +21,17 @@ import kotlinx.coroutines.launch
 
 class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     private val viewModel by viewModels<RepositoriesViewModel>()
+    private val adapter = RepositoryAdapter(object : RepositoryAdapter.OnItemClickListener{
+        override fun repositoryClick(repository: Repository){
+            gotoRepositoryFragment(repository)
+        }
+    })
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
 
         val binding = RepositoriesFragmentBinding.bind(view)
-
-        val adapter = RepositoryAdapter(object : RepositoryAdapter.OnItemClickListener{
-            override fun repositoryClick(repository: Repository){
-                gotoRepositoryFragment(repository)
-            }
-        })
 
         adapter.submitList(viewModel.repositories)
 
@@ -43,19 +42,23 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         initRepositoriesRecycler(repositoriesRecycler, adapter)
     }
 
+    private fun search(searchText: String){
+        lifecycleScope.launch{
+            try {
+                val searchResults = viewModel.repositoriesSearch(searchText)
+                adapter.submitList(searchResults)
+            }catch (e: Exception){
+                Toast.makeText(context, "エラー：検索できませんでした", Toast.LENGTH_SHORT).show()
+                e.printStackTrace()
+            }
+        }
+    }
+
     private fun initSearchInputText(searchInputText: TextInputEditText, adapter: RepositoryAdapter){
         searchInputText.setOnEditorActionListener{ editText, action, _ ->
                 if (action == EditorInfo.IME_ACTION_SEARCH){
                     val searchText = editText.text.toString()
-                    lifecycleScope.launch{
-                        try {
-                            val searchResults = viewModel.repositoriesSearch(searchText)
-                            adapter.submitList(searchResults)
-                        }catch (e: Exception){
-                            Toast.makeText(context, "エラー：検索できませんでした", Toast.LENGTH_SHORT).show()
-                            e.printStackTrace()
-                        }
-                    }
+                    search(searchText)
                     return@setOnEditorActionListener true
                 }
                 return@setOnEditorActionListener false
