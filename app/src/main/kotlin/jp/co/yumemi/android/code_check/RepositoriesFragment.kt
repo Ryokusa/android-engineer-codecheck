@@ -11,10 +11,12 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
 import com.google.android.material.textfield.TextInputEditText
 import jp.co.yumemi.android.code_check.databinding.RepositoriesFragmentBinding
+import kotlinx.coroutines.launch
 
 class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     private val viewModel by viewModels<RepositoriesViewModel>()
@@ -44,8 +46,10 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         searchInputText.setOnEditorActionListener{ editText, action, _ ->
                 if (action == EditorInfo.IME_ACTION_SEARCH){
                     val searchText = editText.text.toString()
-                    val searchResults = viewModel.repositoriesSearch(searchText)
-                    adapter.submitList(searchResults)
+                    lifecycleScope.launch{
+                        val searchResults = viewModel.repositoriesSearch(searchText)
+                        adapter.submitList(searchResults)
+                    }
                     return@setOnEditorActionListener true
                 }
                 return@setOnEditorActionListener false
