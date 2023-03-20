@@ -56,7 +56,7 @@ class RepositoriesViewModel(
         val language = jsonItem.optString("language")
         val stargazersCount = jsonItem.optLong("stargazers_count")
         val watchersCount = jsonItem.optLong("watchers_count")
-        val forksCount = jsonItem.optLong("forks_conut")
+        val forksCount = jsonItem.optLong("forks_count")
         val openIssuesCount = jsonItem.optLong("open_issues_count")
 
         return Item(
