@@ -27,7 +27,7 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         val layoutManager = LinearLayoutManager(context!!)
         val dividerItemDecoration =
             DividerItemDecoration(context!!, layoutManager.orientation)
-        val adapter = CustomAdapter(object : CustomAdapter.OnItemClickListener{
+        val adapter = ItemAdapter(object : ItemAdapter.OnItemClickListener{
             override fun itemClick(item: Item){
                 gotoRepositoryFragment(item)
             }
@@ -74,9 +74,9 @@ val diff_util = object: DiffUtil.ItemCallback<Item>(){
 
 }
 
-class CustomAdapter(
+class ItemAdapter(
     private val itemClickListener: OnItemClickListener,
-) : ListAdapter<Item, CustomAdapter.ViewHolder>(diff_util){
+) : ListAdapter<Item, ItemAdapter.ViewHolder>(diff_util){
 
     class ViewHolder(view: View): RecyclerView.ViewHolder(view)
 
