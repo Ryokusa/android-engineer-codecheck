@@ -31,6 +31,8 @@ class RepositoriesViewModel(
 
     // 検索結果
     fun repositoriesSearch(inputText: String): List<Repository> = runBlocking {
+        if (inputText == "") return@runBlocking listOf()
+
         return@runBlocking GlobalScope.async {
             _repositories = getRepositories(inputText)
 
