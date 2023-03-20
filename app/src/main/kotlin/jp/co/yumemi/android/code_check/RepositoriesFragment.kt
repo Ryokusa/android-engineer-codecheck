@@ -79,7 +79,6 @@ val diffUtil = object: DiffUtil.ItemCallback<Item>(){
     {
         return oldItem == newItem
     }
-
 }
 
 class ItemAdapter(
