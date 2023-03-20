@@ -3,11 +3,14 @@
  */
 package jp.co.yumemi.android.code_check
 
+import android.content.Context
+import android.inputmethodservice.InputMethodService
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -58,12 +61,22 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     private fun initSearchInputText(searchInputText: TextInputEditText){
         searchInputText.setOnEditorActionListener{ editText, action, _ ->
                 if (action == EditorInfo.IME_ACTION_SEARCH){
+                    hideSoftKeyBoard(editText)
+                    editText.clearFocus()
                     val searchText = editText.text.toString()
                     search(searchText)
                     return@setOnEditorActionListener true
                 }
                 return@setOnEditorActionListener false
             }
+    }
+
+    private fun hideSoftKeyBoard(currentFocus: View){
+        val inputMethodService = requireContext().getSystemService(InputMethodManager::class.java)
+        inputMethodService.hideSoftInputFromWindow(
+            currentFocus.windowToken,
+            InputMethodManager.HIDE_NOT_ALWAYS,
+        )
     }
 
     private fun initRepositoriesRecycler(repositoriesRecycler: RecyclerView){
