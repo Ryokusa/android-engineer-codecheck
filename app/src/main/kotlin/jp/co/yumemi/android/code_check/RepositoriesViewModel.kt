@@ -39,7 +39,6 @@ class RepositoriesViewModel(
     }
 
     private suspend fun getRepositories(inputText: String): List<Repository> {
-        //TODO: 例外処理
         val client = HttpClient(Android)
         val response: HttpResponse = client.get("https://api.github.com/search/repositories") {
             header("Accept", "application/vnd.github.v3+json")
