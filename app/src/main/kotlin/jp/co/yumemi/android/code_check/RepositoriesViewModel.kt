@@ -4,10 +4,8 @@
 package jp.co.yumemi.android.code_check
 
 import android.app.Application
-import android.content.Context
 import android.os.Parcelable
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.android.*
@@ -34,7 +32,7 @@ class RepositoriesViewModel(
     // 検索結果
     fun repositoriesSearch(inputText: String): List<Repository> = runBlocking {
         return@runBlocking GlobalScope.async {
-            _repositories = getItems(inputText)
+            _repositories = getRepositories(inputText)
 
             lastSearchDate = Date()
 
@@ -42,7 +40,7 @@ class RepositoriesViewModel(
         }.await()
     }
 
-    private suspend fun getItems(inputText: String): List<Repository> {
+    private suspend fun getRepositories(inputText: String): List<Repository> {
         //TODO: 例外処理
         val client = HttpClient(Android)
         val response: HttpResponse = client.get("https://api.github.com/search/repositories") {
@@ -51,31 +49,31 @@ class RepositoriesViewModel(
         }
 
         val jsonBody = JSONObject(response.receive<String>())
-        return jsonBody2Items(jsonBody)
+        return jsonBody2Repositories(jsonBody)
     }
 
-    private fun jsonBody2Items(jsonBody: JSONObject):List<Repository>  {
-        val jsonItems = jsonBody.optJSONArray("items") ?: throw Error("items can't get from json")
+    private fun jsonBody2Repositories(jsonBody: JSONObject):List<Repository>  {
+        val jsonRepositories = jsonBody.optJSONArray("items") ?: throw Error("'items' can't get from json")
 
         val repositories = mutableListOf<Repository>()
-        for (i in 0 until jsonItems.length()) {
-            val jsonItem = jsonItems.optJSONObject(i)
-            val item = jsonObject2Item(jsonItem)
-            repositories.add(item)
+        for (i in 0 until jsonRepositories.length()) {
+            val jsonRepository = jsonRepositories.optJSONObject(i)
+            val repository = jsonObject2Repository(jsonRepository)
+            repositories.add(repository)
         }
 
         return repositories.toList()
     }
 
-    private fun jsonObject2Item(jsonItem: JSONObject): Repository {
-        val name = jsonItem.optString("full_name")
-        val ownerIconUrl = jsonItem.optJSONObject("owner")?.optString("avatar_url")
+    private fun jsonObject2Repository(jsonRepository: JSONObject): Repository {
+        val name = jsonRepository.optString("full_name")
+        val ownerIconUrl = jsonRepository.optJSONObject("owner")?.optString("avatar_url")
             ?: throw Error("'owner' can't get from json")
-        val language = jsonItem.optString("language")
-        val stargazersCount = jsonItem.optLong("stargazers_count")
-        val watchersCount = jsonItem.optLong("watchers_count")
-        val forksCount = jsonItem.optLong("forks_count")
-        val openIssuesCount = jsonItem.optLong("open_issues_count")
+        val language = jsonRepository.optString("language")
+        val stargazersCount = jsonRepository.optLong("stargazers_count")
+        val watchersCount = jsonRepository.optLong("watchers_count")
+        val forksCount = jsonRepository.optLong("forks_count")
+        val openIssuesCount = jsonRepository.optLong("open_issues_count")
 
         return Repository(
             name,
