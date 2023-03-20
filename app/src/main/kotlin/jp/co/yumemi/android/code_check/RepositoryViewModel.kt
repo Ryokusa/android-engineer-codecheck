@@ -19,10 +19,7 @@ import kotlinx.parcelize.Parcelize
 import org.json.JSONObject
 import java.util.*
 
-/**
- * TwoFragment で使う
- */
-class OneViewModel(
+class RepositoryViewModel(
     val context: Context
 ) : ViewModel() {
 

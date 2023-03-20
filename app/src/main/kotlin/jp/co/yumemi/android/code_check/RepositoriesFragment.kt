@@ -22,7 +22,7 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
 
         val binding = RepositoriesFragmentBinding.bind(view)
 
-        val viewModel = OneViewModel(context!!)
+        val viewModel = RepositoryViewModel(context!!)
 
         val layoutManager = LinearLayoutManager(context!!)
         val dividerItemDecoration =
