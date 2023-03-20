@@ -47,10 +47,11 @@ class RepositoriesViewModel(
     }
 
     private fun jsonBody2Items(jsonBody: JSONObject):List<Item>  {
-        val jsonItems = jsonBody.optJSONArray("items")!!
+        val jsonItems = jsonBody.optJSONArray("items") ?: throw Error("items can't get from json")
+
         val items = mutableListOf<Item>()
         for (i in 0 until jsonItems.length()) {
-            val jsonItem = jsonItems.optJSONObject(i)!!
+            val jsonItem = jsonItems.optJSONObject(i)
             val item = jsonObject2Item(jsonItem)
             items.add(item)
         }
