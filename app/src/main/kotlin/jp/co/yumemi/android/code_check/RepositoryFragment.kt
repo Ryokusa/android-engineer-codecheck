@@ -16,24 +16,21 @@ class RepositoryFragment : Fragment(R.layout.repository_fragment) {
 
     private val args: RepositoryFragmentArgs by navArgs()
 
-    private var binding: RepositoryFragmentBinding? = null
-    private val _binding get() = binding!!
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         Log.d("検索した日時", lastSearchDate.toString())
 
-        binding = RepositoryFragmentBinding.bind(view)
+        val binding = RepositoryFragmentBinding.bind(view)
 
         var item = args.Item
 
-        _binding.ownerIconView.load(item.ownerIconUrl);
-        _binding.nameView.text = item.name;
-        _binding.languageView.text = item.language;
-        _binding.starsView.text = "${item.stargazersCount} stars";
-        _binding.watchersView.text = "${item.watchersCount} watchers";
-        _binding.forksView.text = "${item.forksCount} forks";
-        _binding.openIssuesView.text = "${item.openIssuesCount} open issues";
+        binding.ownerIconView.load(item.ownerIconUrl);
+        binding.nameView.text = item.name;
+        binding.languageView.text = item.language;
+        binding.starsView.text = "${item.stargazersCount} stars";
+        binding.watchersView.text = "${item.watchersCount} watchers";
+        binding.forksView.text = "${item.forksCount} forks";
+        binding.openIssuesView.text = "${item.openIssuesCount} open issues";
     }
 }
