@@ -42,12 +42,12 @@ class RepositoryAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int)
     {
         val repository = getItem(position)
-        val itemView = holder.itemView
+        val repositoryView = holder.itemView
 
-        val repositoryNameView = itemView.findViewById<TextView>(R.id.repository_name_view)
+        val repositoryNameView = repositoryView.findViewById<TextView>(R.id.repository_name_view)
         repositoryNameView.text = repository.name
 
-        itemView.setOnClickListener{
+        repositoryView.setOnClickListener{
             repositoryClickListener.repositoryClick(repository)
         }
     }
