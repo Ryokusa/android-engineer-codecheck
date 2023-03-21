@@ -1,60 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/search_bar"
-        android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_margin="12dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="8dp"
-        app:layout_constraintBottom_toTopOf="@id/repositories_recycler"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <data>
+        <variable
+            name="viewModel"
+            type="jp.co.yumemi.android.code_check.RepositoriesViewModel" />
+    </data>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/search_input_layout"
-            style="@style/TextInputLayoutNoBorder"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:importantForAutofill="no"
-            app:endIconMode="clear_text"
-            app:endIconTint="@android:color/darker_gray"
-            app:hintTextColor="@android:color/darker_gray"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/search_bar"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_margin="12dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="8dp"
+            app:layout_constraintBottom_toTopOf="@id/repositories_recycler"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/search_input_layout"
+                style="@style/TextInputLayoutNoBorder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:importantForAutofill="no"
+                app:endIconMode="clear_text"
+                app:endIconTint="@android:color/darker_gray"
+                app:hintTextColor="@android:color/darker_gray"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:startIconDrawable="@android:drawable/ic_menu_search"
+                app:startIconTint="@android:color/darker_gray">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/search_input_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/search_input_text_hint"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:textSize="12sp"
+                    android:text="@={viewModel.searchText}"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/repositories_recycler"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:startIconDrawable="@android:drawable/ic_menu_search"
-            app:startIconTint="@android:color/darker_gray">
+            app:layout_constraintTop_toBottomOf="@id/search_bar" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/search_input_text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:hint="@string/search_input_text_hint"
-                android:imeOptions="actionSearch"
-                android:inputType="text"
-                android:textSize="12sp" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-    </com.google.android.material.card.MaterialCardView>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/repositories_recycler"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_bar" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

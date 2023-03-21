@@ -4,7 +4,9 @@
 package jp.co.yumemi.android.code_check
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -12,7 +14,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
 import com.google.android.material.textfield.TextInputEditText
-import com.wada811.viewbinding.viewBinding
 import jp.co.yumemi.android.code_check.databinding.RepositoriesFragmentBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,7 +27,21 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
             gotoRepositoryFragment(repository)
         }
     })
-    private val binding:RepositoriesFragmentBinding by viewBinding()
+
+    private var _binding: RepositoriesFragmentBinding? = null
+    private val binding
+        get() = checkNotNull(_binding)
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = RepositoriesFragmentBinding.inflate(inflater, container, false)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+        return binding.root
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
@@ -35,10 +50,10 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         initViews()
     }
 
-    private fun search(searchText: String){
+    private fun search(){
         lifecycleScope.launch{
             try {
-                val searchResults = viewModel.repositoriesSearch(searchText)
+                val searchResults = viewModel.repositoriesSearch()
                 adapter.submitList(searchResults)
             }catch (e: Exception){
                 showSearchError(e)
@@ -59,8 +74,7 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
                 if (action == EditorInfo.IME_ACTION_SEARCH){
                     UtilCommon.hideSoftKeyBoard(requireContext(), editText)
                     editText.clearFocus()
-                    val searchText = editText.text.toString()
-                    search(searchText)
+                    search()
                     return@setOnEditorActionListener true
                 }
                 return@setOnEditorActionListener false
@@ -80,7 +94,6 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         }
 
         adapter.submitList(viewModel.repositories)
-
     }
 
     fun gotoRepositoryFragment(repository: Repository)
