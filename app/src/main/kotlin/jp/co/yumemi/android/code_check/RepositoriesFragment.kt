@@ -64,10 +64,10 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         val dividerItemDecoration =
             DividerItemDecoration(context, layoutManager.orientation)
 
-        with(repositoriesRecycler) {
-            this.layoutManager = layoutManager
-            addItemDecoration(dividerItemDecoration)
-            this.adapter = adapter
+        repositoriesRecycler.let{
+            it.layoutManager = layoutManager
+            it.addItemDecoration(dividerItemDecoration)
+            it.adapter = adapter
         }
 
     }
