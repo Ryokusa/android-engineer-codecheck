@@ -45,17 +45,6 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         initViews()
     }
 
-    private fun search(){
-        lifecycleScope.launch{
-            try {
-                viewModel.repositoriesSearch()
-            }catch (e: Exception){
-                showSearchError(e)
-                e.printStackTrace()
-            }
-        }
-    }
-
     private fun initViews(){
         with(binding){
             initSearchInputText(searchInputText)
@@ -68,7 +57,7 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
                 if (action == EditorInfo.IME_ACTION_SEARCH){
                     UtilCommon.hideSoftKeyBoard(requireContext(), editText)
                     editText.clearFocus()
-                    search()
+                    viewModel.searchRepositories()
                     return@setOnEditorActionListener true
                 }
                 return@setOnEditorActionListener false
@@ -105,15 +94,7 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         findNavController().navigate(action)
     }
 
-    /** 検索エラー表示
-     * @param e 検索時に発生したException
-     */
-    private suspend fun showSearchError(e: Exception) = withContext(Dispatchers.Main){
-        when (e) {
-            is JSONException -> UtilCommon.showErrorMessage(requireContext(), "JSONパースエラー")
-            else -> UtilCommon.showErrorMessage(requireContext(), "検索エラー")
-        }
-    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
