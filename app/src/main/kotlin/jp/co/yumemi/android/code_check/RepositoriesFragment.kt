@@ -47,6 +47,7 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
                 adapter.submitList(searchResults)
             }catch (e: Exception){
                 showSearchError(e)
+                e.printStackTrace()
             }
         }
     }
@@ -93,7 +94,6 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
             is JSONException -> UtilCommon.showErrorMessage(requireContext(), "JSONパースエラー")
             else -> UtilCommon.showErrorMessage(requireContext(), "検索エラー")
         }
-        e.printStackTrace()
     }
 
     override fun onDestroyView() {
