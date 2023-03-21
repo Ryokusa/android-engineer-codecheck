@@ -21,20 +21,12 @@ class RepositoriesViewModel(
     /** リポジトリ検索
      * 検索失敗時はリポジトリを空にし、エラートーストを表示
      */
-    suspend fun repositoriesSearch(): List<Repository> =  withContext(Dispatchers.IO){
+    suspend fun repositoriesSearch(): List<Repository> = withContext(Dispatchers.Main){
         lastSearchDate = Date()
+        resetRepositories()
 
-        try {
-            val gitHubClient = GithubClient()
-            withContext(Dispatchers.Main) {
-                repositories.value = gitHubClient.searchRepositories(searchText.value ?: "")
-            }
-        }catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                resetRepositories()
-            }
-            throw e
-        }
+        val gitHubClient = GithubClient()
+        repositories.value = gitHubClient.searchRepositories(searchText.value ?: "")
 
         return@withContext repositories.value ?: listOf()
     }
