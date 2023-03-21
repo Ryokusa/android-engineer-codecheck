@@ -19,10 +19,6 @@ import jp.co.yumemi.android.code_check.databinding.RepositoriesFragmentBinding
 class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     private val viewModel by viewModels<RepositoriesViewModel>()
 
-    private var _binding: RepositoriesFragmentBinding? = null
-    private val binding
-        get() = checkNotNull(_binding)
-
     object RepositoriesBindingAdapter {
         @BindingAdapter("onEditorAction")
         @JvmStatic
@@ -36,17 +32,12 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = RepositoriesFragmentBinding.inflate(inflater, container, false)
+        val binding = RepositoriesFragmentBinding.inflate(inflater, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
-    {
-        super.onViewCreated(view, savedInstanceState)
 
         initRepositoriesRecycler(binding.repositoriesRecycler)
+        return binding.root
     }
 
     private fun initRepositoriesRecycler(repositoriesRecycler: RecyclerView){
@@ -77,11 +68,6 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         val action = RepositoriesFragmentDirections
             .actionRepositoriesFragmentToRepositoryFragment(repository)
         findNavController().navigate(action)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding.repositoriesRecycler.adapter = null
     }
 }
 
