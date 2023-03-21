@@ -16,22 +16,22 @@ import androidx.recyclerview.widget.*
 import com.google.android.material.textfield.TextInputEditText
 import jp.co.yumemi.android.code_check.databinding.RepositoriesFragmentBinding
 
+object RepositoriesBindingAdapter {
+    @BindingAdapter("onEditorAction")
+    @JvmStatic
+    fun setOnInputEditorAction(view: TextInputEditText, listener: TextView.OnEditorActionListener){
+        view.setOnEditorActionListener(listener)
+    }
+
+    @BindingAdapter("divider")
+    @JvmStatic
+    fun setDivider(view: RecyclerView, dividerItemDecoration: DividerItemDecoration){
+        view.addItemDecoration(dividerItemDecoration)
+    }
+}
+
 class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     private val viewModel by viewModels<RepositoriesViewModel>()
-
-    object RepositoriesBindingAdapter {
-        @BindingAdapter("onEditorAction")
-        @JvmStatic
-        fun setOnInputEditorAction(view: TextInputEditText, listener: TextView.OnEditorActionListener){
-            view.setOnEditorActionListener(listener)
-        }
-
-        @BindingAdapter("divider")
-        @JvmStatic
-        fun setDivider(view: RecyclerView, dividerItemDecoration: DividerItemDecoration){
-            view.addItemDecoration(dividerItemDecoration)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
