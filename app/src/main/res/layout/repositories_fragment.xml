@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="jp.co.yumemi.android.code_check.RepositoriesViewModel.RepositoriesBindingAdapter"/>
         <variable
             name="viewModel"
             type="jp.co.yumemi.android.code_check.RepositoriesViewModel" />
@@ -51,7 +52,8 @@
                     android:imeOptions="actionSearch"
                     android:inputType="text"
                     android:textSize="12sp"
-                    android:text="@={viewModel.searchText}"/>
+                    android:text="@={viewModel.searchText}"
+                    app:onEditorAction="@{viewModel.onEditorAction}"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
