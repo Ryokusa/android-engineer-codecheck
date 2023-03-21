@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.*
 import com.google.android.material.textfield.TextInputEditText
 import com.wada811.viewbinding.viewBinding
 import jp.co.yumemi.android.code_check.databinding.RepositoriesFragmentBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONException
 
 class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
@@ -30,18 +32,25 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter.submitList(viewModel.repositories)
-
-        with(binding){
-            initSearchInputText(searchInputText)
-            initRepositoriesRecycler(repositoriesRecycler)
-        }
+        initViews()
     }
 
     private fun search(searchText: String){
         lifecycleScope.launch{
-            val searchResults = viewModel.repositoriesSearch(searchText)
-            adapter.submitList(searchResults)
+            try {
+                val searchResults = viewModel.repositoriesSearch(searchText)
+                adapter.submitList(searchResults)
+            }catch (e: Exception){
+                showSearchError(e)
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun initViews(){
+        with(binding){
+            initSearchInputText(searchInputText)
+            initRepositoriesRecycler(repositoriesRecycler)
         }
     }
 
@@ -64,11 +73,13 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         val dividerItemDecoration =
             DividerItemDecoration(context, layoutManager.orientation)
 
-        with(repositoriesRecycler) {
-            this.layoutManager = layoutManager
-            addItemDecoration(dividerItemDecoration)
-            this.adapter = adapter
+        repositoriesRecycler.let{
+            it.layoutManager = layoutManager
+            it.addItemDecoration(dividerItemDecoration)
+            it.adapter = adapter
         }
+
+        adapter.submitList(viewModel.repositories)
 
     }
 
@@ -77,6 +88,16 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         val action = RepositoriesFragmentDirections
             .actionRepositoriesFragmentToRepositoryFragment(repository)
         findNavController().navigate(action)
+    }
+
+    /** 検索エラー表示
+     * @param e 検索時に発生したException
+     */
+    private suspend fun showSearchError(e: Exception) = withContext(Dispatchers.Main){
+        when (e) {
+            is JSONException -> UtilCommon.showErrorMessage(requireContext(), "JSONパースエラー")
+            else -> UtilCommon.showErrorMessage(requireContext(), "検索エラー")
+        }
     }
 
     override fun onDestroyView() {

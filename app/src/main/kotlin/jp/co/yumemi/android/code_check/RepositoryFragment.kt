@@ -9,7 +9,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import coil.load
-import jp.co.yumemi.android.code_check.MainActivity.Companion.lastSearchDate
+import jp.co.yumemi.android.code_check.UtilCommon.Companion.lastSearchDate
 import jp.co.yumemi.android.code_check.databinding.RepositoryFragmentBinding
 
 class RepositoryFragment : Fragment(R.layout.repository_fragment) {
