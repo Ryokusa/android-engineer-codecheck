@@ -6,7 +6,6 @@ package jp.co.yumemi.android.code_check
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import jp.co.yumemi.android.code_check.UtilCommon.Companion.lastSearchDate
 import kotlinx.coroutines.*
@@ -16,7 +15,7 @@ import java.util.*
 class RepositoriesViewModel(
     application: Application
 ) : AndroidViewModel(application) {
-    val context = application
+    private val context = application
 
     val repositories = MutableLiveData<List<Repository>>()
 
