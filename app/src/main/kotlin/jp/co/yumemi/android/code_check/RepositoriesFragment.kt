@@ -40,18 +40,9 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     }
 
     private fun search(searchText: String){
-        viewModel.resetRepositories()
         lifecycleScope.launch{
-            try {
-                val searchResults = viewModel.repositoriesSearch(searchText)
-                adapter.submitList(searchResults)
-            }catch (e: Exception){
-                when(e){
-                    is JSONException -> UtilCommon.showErrorMessage(requireContext(), "JSONパースエラー")
-                    else -> UtilCommon.showErrorMessage(requireContext(), "検索エラー")
-                }
-                e.printStackTrace()
-            }
+            val searchResults = viewModel.repositoriesSearch(searchText)
+            adapter.submitList(searchResults)
         }
     }
 
