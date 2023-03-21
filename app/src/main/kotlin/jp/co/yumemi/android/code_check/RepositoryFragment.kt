@@ -27,12 +27,15 @@ class RepositoryFragment : Fragment(R.layout.repository_fragment) {
 
     private fun setRepository(binding: RepositoryFragmentBinding){
         val repository = args.repository
-        binding.ownerIconView.load(repository.owner.ownerIconUrl)
-        binding.nameView.text = repository.name
-        binding.languageView.text = getString(R.string.written_language, repository.language) ?: getString(R.string.nothing_language)
-        binding.starsView.text = getString(R.string.stars, repository.stargazersCount)
-        binding.watchersView.text = getString(R.string.watchers, repository.watchersCount)
-        binding.forksView.text = getString(R.string.forks, repository.forksCount)
-        binding.openIssuesView.text = getString(R.string.open_issues, repository.openIssuesCount)
+
+        with(binding) {
+            ownerIconView.load(repository.owner.ownerIconUrl)
+            nameView.text = repository.name
+            languageView.text = getString(R.string.written_language, repository.language) ?: getString(R.string.nothing_language)
+            starsView.text = getString(R.string.stars, repository.stargazersCount)
+            watchersView.text = getString(R.string.watchers, repository.watchersCount)
+            forksView.text = getString(R.string.forks, repository.forksCount)
+            openIssuesView.text = getString(R.string.open_issues, repository.openIssuesCount)
+        }
     }
 }

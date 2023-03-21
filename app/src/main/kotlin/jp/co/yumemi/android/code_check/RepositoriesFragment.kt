@@ -32,11 +32,10 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
 
         adapter.submitList(viewModel.repositories)
 
-        val searchInputText = binding.searchInputText
-        initSearchInputText(searchInputText)
-
-        val repositoriesRecycler = binding.repositoriesRecycler
-        initRepositoriesRecycler(repositoriesRecycler)
+        with(binding){
+            initSearchInputText(searchInputText)
+            initRepositoriesRecycler(repositoriesRecycler)
+        }
     }
 
     private fun search(searchText: String){
@@ -65,11 +64,12 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         val dividerItemDecoration =
             DividerItemDecoration(context, layoutManager.orientation)
 
-        repositoriesRecycler.also{
-            it.layoutManager = layoutManager
-            it.addItemDecoration(dividerItemDecoration)
-            it.adapter = adapter
+        with(repositoriesRecycler) {
+            this.layoutManager = layoutManager
+            addItemDecoration(dividerItemDecoration)
+            this.adapter = adapter
         }
+
     }
 
     fun gotoRepositoryFragment(repository: Repository)
