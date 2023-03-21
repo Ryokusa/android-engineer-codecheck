@@ -3,8 +3,6 @@
  */
 package jp.co.yumemi.android.code_check
 
-import android.content.Context
-import android.inputmethodservice.InputMethodService
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -138,7 +136,7 @@ class RepositoryAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
     {
     	val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.repository_layout, parent, false)
+            .inflate(R.layout.repository_item_layout, parent, false)
     	return ViewHolder(view)
     }
 
