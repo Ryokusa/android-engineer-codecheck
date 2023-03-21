@@ -25,6 +25,12 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         fun setOnInputEditorAction(view: TextInputEditText, listener: TextView.OnEditorActionListener){
             view.setOnEditorActionListener(listener)
         }
+
+        @BindingAdapter("divider")
+        @JvmStatic
+        fun setDivider(view: RecyclerView, dividerItemDecoration: DividerItemDecoration){
+            view.addItemDecoration(dividerItemDecoration)
+        }
     }
 
     override fun onCreateView(
@@ -36,30 +42,23 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        initRepositoriesRecycler(binding.repositoriesRecycler)
+        initRepositoriesRecycler(binding)
+
         return binding.root
     }
 
-    private fun initRepositoriesRecycler(repositoriesRecycler: RecyclerView){
+    private fun initRepositoriesRecycler(binding: RepositoriesFragmentBinding){
+        binding.divider = DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL)
+
         val adapter = RepositoryAdapter(object : RepositoryAdapter.OnItemClickListener{
             override fun repositoryClick(repository: Repository){
                 gotoRepositoryFragment(repository)
             }
         }, viewLifecycleOwner)
+        binding.adapter = adapter
 
         viewModel.repositories.observe(viewLifecycleOwner) {
             adapter.submitList(it)
-        }
-
-        val context = requireContext()
-        val layoutManager = LinearLayoutManager(context)
-        val dividerItemDecoration =
-            DividerItemDecoration(context, layoutManager.orientation)
-
-        repositoriesRecycler.let{
-            it.layoutManager = layoutManager
-            it.addItemDecoration(dividerItemDecoration)
-            it.adapter = adapter
         }
     }
 
