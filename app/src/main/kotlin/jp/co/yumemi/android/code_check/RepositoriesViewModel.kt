@@ -5,7 +5,7 @@ package jp.co.yumemi.android.code_check
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import jp.co.yumemi.android.code_check.MainActivity.Companion.lastSearchDate
+import jp.co.yumemi.android.code_check.UtilCommon.Companion.lastSearchDate
 import kotlinx.coroutines.*
 import java.util.*
 
