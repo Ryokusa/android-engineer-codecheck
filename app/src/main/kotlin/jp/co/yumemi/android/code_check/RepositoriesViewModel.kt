@@ -36,7 +36,7 @@ class RepositoriesViewModel(
     /** リポジトリ検索
      * 検索失敗時はリポジトリを空にし、エラートーストを表示
      */
-    fun searchRepositories() {
+    private fun searchRepositories() {
         viewModelScope.launch{
             lastSearchDate = Date()
             resetRepositories()
