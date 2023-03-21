@@ -19,6 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
 import com.google.android.material.textfield.TextInputEditText
+import com.wada811.viewbinding.viewBinding
 import jp.co.yumemi.android.code_check.databinding.RepositoriesFragmentBinding
 import kotlinx.coroutines.launch
 import org.json.JSONException
@@ -30,15 +31,11 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
             gotoRepositoryFragment(repository)
         }
     })
-    private var _binding:RepositoriesFragmentBinding? = null
-    private val binding
-        get() = _binding!!
+    private val binding:RepositoriesFragmentBinding by viewBinding()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
-
-        _binding = RepositoriesFragmentBinding.bind(view)
 
         adapter.submitList(viewModel.repositories)
 
@@ -113,7 +110,6 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     override fun onDestroyView() {
         super.onDestroyView()
         binding.repositoriesRecycler.adapter = null
-        _binding = null
     }
 }
 
