@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.*
 import com.google.android.material.textfield.TextInputEditText
 import com.wada811.viewbinding.viewBinding
 import jp.co.yumemi.android.code_check.databinding.RepositoriesFragmentBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONException
 
 class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
@@ -40,8 +42,12 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
 
     private fun search(searchText: String){
         lifecycleScope.launch{
-            val searchResults = viewModel.repositoriesSearch(searchText)
-            adapter.submitList(searchResults)
+            try {
+                val searchResults = viewModel.repositoriesSearch(searchText)
+                adapter.submitList(searchResults)
+            }catch (e: Exception){
+                showSearchError(e)
+            }
         }
     }
 
@@ -77,6 +83,17 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         val action = RepositoriesFragmentDirections
             .actionRepositoriesFragmentToRepositoryFragment(repository)
         findNavController().navigate(action)
+    }
+
+    /** 検索エラー表示
+     * @param e 検索時に発生したException
+     */
+    private suspend fun showSearchError(e: Exception) = withContext(Dispatchers.Main){
+        when (e) {
+            is JSONException -> UtilCommon.showErrorMessage(requireContext(), "JSONパースエラー")
+            else -> UtilCommon.showErrorMessage(requireContext(), "検索エラー")
+        }
+        e.printStackTrace()
     }
 
     override fun onDestroyView() {
