@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.*
 import com.google.android.material.textfield.TextInputEditText
 import jp.co.yumemi.android.code_check.databinding.RepositoriesFragmentBinding
 import kotlinx.coroutines.launch
+import org.json.JSONException
 
 class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     private val viewModel by viewModels<RepositoriesViewModel>()
@@ -52,10 +53,17 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
                 val searchResults = viewModel.repositoriesSearch(searchText)
                 adapter.submitList(searchResults)
             }catch (e: Exception){
-                Toast.makeText(context, "エラー：検索できませんでした", Toast.LENGTH_SHORT).show()
+                when(e){
+                    is JSONException -> showErrorMessage("JSONパースエラー")
+                    else -> showErrorMessage("検索エラー")
+                }
                 e.printStackTrace()
             }
         }
+    }
+
+    private fun showErrorMessage(message: String){
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
     private fun initSearchInputText(searchInputText: TextInputEditText){

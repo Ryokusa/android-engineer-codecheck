@@ -23,14 +23,13 @@ class RepositoryFragment : Fragment(R.layout.repository_fragment) {
 
         val binding = RepositoryFragmentBinding.bind(view)
 
-        val item = args.repository
-
-        binding.ownerIconView.load(item.ownerIconUrl)
-        binding.nameView.text = item.name
-        binding.languageView.text = item.language
-        binding.starsView.text = "${item.stargazersCount} stars"
-        binding.watchersView.text = "${item.watchersCount} watchers"
-        binding.forksView.text = "${item.forksCount} forks"
-        binding.openIssuesView.text = "${item.openIssuesCount} open issues"
+        val repository = args.repository
+        binding.ownerIconView.load(repository.owner.ownerIconUrl)
+        binding.nameView.text = repository.name
+        binding.languageView.text = getString(R.string.written_language, repository.language)
+        binding.starsView.text = getString(R.string.stars, repository.stargazersCount)
+        binding.watchersView.text = getString(R.string.watchers, repository.watchersCount)
+        binding.forksView.text = getString(R.string.forks, repository.forksCount)
+        binding.openIssuesView.text = getString(R.string.open_issues, repository.openIssuesCount)
     }
 }

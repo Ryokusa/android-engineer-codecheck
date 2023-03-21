@@ -14,6 +14,10 @@ import io.ktor.client.statement.*
 import jp.co.yumemi.android.code_check.MainActivity.Companion.lastSearchDate
 import kotlinx.coroutines.*
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
 
@@ -39,23 +43,28 @@ class RepositoriesViewModel(
     }
 
     private suspend fun getRepositories(inputText: String): List<Repository> {
-        //TODO: 例外処理
         val client = HttpClient(Android)
         val response: HttpResponse = client.get("https://api.github.com/search/repositories") {
             header("Accept", "application/vnd.github.v3+json")
             parameter("q", inputText)
         }
 
-        val jsonBody = JSONObject(response.receive<String>())
-        return jsonBody2Repositories(jsonBody)
+        try {
+            val jsonBody = JSONObject(response.receive<String>())
+            return jsonBody2Repositories(jsonBody)
+        }catch (e: Exception){
+            throw JSONException("json parse error")
+        }
+
     }
 
     fun resetRepositories() {
         _repositories = listOf()
     }
 
+
     private fun jsonBody2Repositories(jsonBody: JSONObject):List<Repository>  {
-        val jsonRepositories = jsonBody.optJSONArray("items") ?: throw Error("'items' can't get from json")
+        val jsonRepositories = jsonBody.optJSONArray("items") ?: throw JSONException("'items' can't get from json")
 
         val repositories = mutableListOf<Repository>()
         for (i in 0 until jsonRepositories.length()) {
@@ -68,34 +77,26 @@ class RepositoriesViewModel(
     }
 
     private fun jsonObject2Repository(jsonRepository: JSONObject): Repository {
-        val name = jsonRepository.optString("full_name")
-        val ownerIconUrl = jsonRepository.optJSONObject("owner")?.optString("avatar_url")
-            ?: throw Error("'owner' can't get from json")
-        val language = jsonRepository.optString("language")
-        val stargazersCount = jsonRepository.optLong("stargazers_count")
-        val watchersCount = jsonRepository.optLong("watchers_count")
-        val forksCount = jsonRepository.optLong("forks_count")
-        val openIssuesCount = jsonRepository.optLong("open_issues_count")
+        val json = Json { ignoreUnknownKeys = true }
 
-        return Repository(
-            name,
-            ownerIconUrl,
-            context.getString(R.string.written_language, language),
-            stargazersCount,
-            watchersCount,
-            forksCount,
-            openIssuesCount
-        )
+         return json.decodeFromString(jsonRepository.toString())
     }
 }
 
 @Parcelize
+@kotlinx.serialization.Serializable
 data class Repository(
-    val name: String,
-    val ownerIconUrl: String,
-    val language: String,
-    val stargazersCount: Long,
-    val watchersCount: Long,
-    val forksCount: Long,
-    val openIssuesCount: Long,
+    @SerialName("full_name") val name: String,
+    @SerialName("owner") val owner: Owner,
+    @SerialName("language") val language: String?="",
+    @SerialName("stargazers_count") val stargazersCount: Long,
+    @SerialName("watchers_count")val watchersCount: Long,
+    @SerialName("forks_count") val forksCount: Long,
+    @SerialName("open_issues_count") val openIssuesCount: Long,
 ) : Parcelable
+
+@Parcelize
+@kotlinx.serialization.Serializable
+data class Owner(
+    @SerialName("avatar_url") val ownerIconUrl: String
+) :Parcelable
