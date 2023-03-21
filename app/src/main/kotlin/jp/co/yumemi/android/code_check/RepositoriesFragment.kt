@@ -22,11 +22,7 @@ import org.json.JSONException
 
 class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     private val viewModel by viewModels<RepositoriesViewModel>()
-    private val adapter = RepositoryAdapter(object : RepositoryAdapter.OnItemClickListener{
-        override fun repositoryClick(repository: Repository){
-            gotoRepositoryFragment(repository)
-        }
-    })
+    private lateinit var adapter: RepositoryAdapter
 
     private var _binding: RepositoriesFragmentBinding? = null
     private val binding
@@ -46,6 +42,12 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
+
+        adapter = RepositoryAdapter(object : RepositoryAdapter.OnItemClickListener{
+            override fun repositoryClick(repository: Repository){
+                gotoRepositoryFragment(repository)
+            }
+        }, viewLifecycleOwner)
 
         initViews()
     }
