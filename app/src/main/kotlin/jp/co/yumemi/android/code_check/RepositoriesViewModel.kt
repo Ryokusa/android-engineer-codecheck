@@ -14,9 +14,7 @@ class RepositoriesViewModel(
     application: Application
 ) : AndroidViewModel(application) {
 
-    private var _repositories = listOf<Repository>()
-    val repositories: List<Repository>
-        get() = _repositories
+    val repositories = MutableLiveData<List<Repository>>()
 
     val searchText = MutableLiveData("")
 
@@ -28,17 +26,21 @@ class RepositoriesViewModel(
 
         try {
             val gitHubClient = GithubClient()
-            _repositories = gitHubClient.searchRepositories(searchText.value ?: "")
+            withContext(Dispatchers.Main) {
+                repositories.value = gitHubClient.searchRepositories(searchText.value ?: "")
+            }
         }catch (e: Exception) {
-            resetRepositories()
+            withContext(Dispatchers.Main) {
+                resetRepositories()
+            }
             throw e
         }
 
-        return@withContext _repositories
+        return@withContext repositories.value ?: listOf()
     }
 
     private fun resetRepositories() {
-        _repositories = listOf()
+        repositories.value = listOf()
     }
 }
 

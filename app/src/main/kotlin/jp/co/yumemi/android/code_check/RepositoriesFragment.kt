@@ -22,7 +22,6 @@ import org.json.JSONException
 
 class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     private val viewModel by viewModels<RepositoriesViewModel>()
-    private lateinit var adapter: RepositoryAdapter
 
     private var _binding: RepositoriesFragmentBinding? = null
     private val binding
@@ -43,20 +42,13 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = RepositoryAdapter(object : RepositoryAdapter.OnItemClickListener{
-            override fun repositoryClick(repository: Repository){
-                gotoRepositoryFragment(repository)
-            }
-        }, viewLifecycleOwner)
-
         initViews()
     }
 
     private fun search(){
         lifecycleScope.launch{
             try {
-                val searchResults = viewModel.repositoriesSearch()
-                adapter.submitList(searchResults)
+                viewModel.repositoriesSearch()
             }catch (e: Exception){
                 showSearchError(e)
                 e.printStackTrace()
@@ -84,6 +76,16 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     }
 
     private fun initRepositoriesRecycler(repositoriesRecycler: RecyclerView){
+        val adapter = RepositoryAdapter(object : RepositoryAdapter.OnItemClickListener{
+            override fun repositoryClick(repository: Repository){
+                gotoRepositoryFragment(repository)
+            }
+        }, viewLifecycleOwner)
+
+        viewModel.repositories.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
+        }
+
         val context = requireContext()
         val layoutManager = LinearLayoutManager(context)
         val dividerItemDecoration =
@@ -94,8 +96,6 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
             it.addItemDecoration(dividerItemDecoration)
             it.adapter = adapter
         }
-
-        adapter.submitList(viewModel.repositories)
     }
 
     fun gotoRepositoryFragment(repository: Repository)
