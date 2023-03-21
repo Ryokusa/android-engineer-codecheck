@@ -32,12 +32,7 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter.submitList(viewModel.repositories)
-
-        with(binding){
-            initSearchInputText(searchInputText)
-            initRepositoriesRecycler(repositoriesRecycler)
-        }
+        initViews()
     }
 
     private fun search(searchText: String){
@@ -49,6 +44,13 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
                 showSearchError(e)
                 e.printStackTrace()
             }
+        }
+    }
+
+    private fun initViews(){
+        with(binding){
+            initSearchInputText(searchInputText)
+            initRepositoriesRecycler(repositoriesRecycler)
         }
     }
 
@@ -76,6 +78,8 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
             it.addItemDecoration(dividerItemDecoration)
             it.adapter = adapter
         }
+
+        adapter.submitList(viewModel.repositories)
 
     }
 
