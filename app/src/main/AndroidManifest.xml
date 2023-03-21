@@ -12,8 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidEngineerCodeCheck"
-        android:fullBackupContent="@xml/backup_descriptor"
-        android:dataExtractionRules="@xml/data_extraction_rules">
+        android:fullBackupContent="@xml/backup_descriptor">
         <activity
             android:name="jp.co.yumemi.android.code_check.MainActivity"
             android:exported="true">
