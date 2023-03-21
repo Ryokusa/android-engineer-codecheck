@@ -6,4 +6,5 @@
     <string name="watchers">%d watchers</string>
     <string name="forks">%d forks</string>
     <string name="open_issues">%d open issues</string>
+    <string name="nothing_language">使用言語なし</string>
 </resources>

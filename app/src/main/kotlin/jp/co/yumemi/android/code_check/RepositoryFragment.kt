@@ -26,7 +26,7 @@ class RepositoryFragment : Fragment(R.layout.repository_fragment) {
         val repository = args.repository
         binding.ownerIconView.load(repository.owner.ownerIconUrl)
         binding.nameView.text = repository.name
-        binding.languageView.text = getString(R.string.written_language, repository.language)
+        binding.languageView.text = getString(R.string.written_language, repository.language) ?: getString(R.string.nothing_language)
         binding.starsView.text = getString(R.string.stars, repository.stargazersCount)
         binding.watchersView.text = getString(R.string.watchers, repository.watchersCount)
         binding.forksView.text = getString(R.string.forks, repository.forksCount)
