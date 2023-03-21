@@ -5,6 +5,8 @@ import io.ktor.client.call.*
 import io.ktor.client.engine.android.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -25,8 +27,8 @@ class GithubClient {
      * @return リポジトリ配列
      * @throws JSONException パースエラー
      */
-    suspend fun searchRepositories(searchText: String): List<Repository> {
-        if (searchText == "") return listOf()
+    suspend fun searchRepositories(searchText: String): List<Repository> = withContext(Dispatchers.IO){
+        if (searchText == "") return@withContext listOf()
 
         val url = SEARCH_API_URL + "repositories"
 
@@ -37,7 +39,7 @@ class GithubClient {
 
         try {
             val jsonBody = JSONObject(response.receive<String>())
-            return Repository.jsonBody2Repositories(jsonBody)
+            return@withContext Repository.jsonBody2Repositories(jsonBody)
         }catch (e: Exception){
             throw JSONException("json parse error")
         }

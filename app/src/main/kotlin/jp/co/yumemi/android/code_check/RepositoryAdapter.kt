@@ -1,15 +1,16 @@
 package jp.co.yumemi.android.code_check
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import jp.co.yumemi.android.code_check.databinding.RepositoryItemBinding
 
 class RepositoryAdapter(
     private val repositoryClickListener: OnItemClickListener,
+    private val viewLifeCycleOwner: LifecycleOwner,
 ) : ListAdapter<Repository, RepositoryAdapter.ViewHolder>(diffUtil){
 
     companion object{
@@ -26,7 +27,15 @@ class RepositoryAdapter(
         }
     }
 
-    class ViewHolder(view: View): RecyclerView.ViewHolder(view)
+    class ViewHolder(private val binding: RepositoryItemBinding): RecyclerView.ViewHolder(binding.root){
+        fun bind(item: Repository, repositoryClickListener: OnItemClickListener, viewLifeCycleOwner: LifecycleOwner) {
+            binding.lifecycleOwner = viewLifeCycleOwner
+            binding.repository = item
+            binding.itemClickListener = repositoryClickListener
+
+            binding.executePendingBindings()
+        }
+    }
 
     interface OnItemClickListener{
         fun repositoryClick(repository: Repository)
@@ -34,21 +43,13 @@ class RepositoryAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
     {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.repository_item_layout, parent, false)
-        return ViewHolder(view)
+        val layoutInflater = LayoutInflater.from(parent.context)
+        return ViewHolder(RepositoryItemBinding.inflate(layoutInflater, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int)
     {
         val repository = getItem(position)
-        val repositoryView = holder.itemView
-
-        val repositoryNameView = repositoryView.findViewById<TextView>(R.id.repository_name_view)
-        repositoryNameView.text = repository.name
-
-        repositoryView.setOnClickListener{
-            repositoryClickListener.repositoryClick(repository)
-        }
+        holder.bind(repository, repositoryClickListener, viewLifeCycleOwner)
     }
 }

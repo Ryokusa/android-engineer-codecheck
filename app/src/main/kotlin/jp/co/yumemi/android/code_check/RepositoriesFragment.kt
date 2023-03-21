@@ -4,83 +4,62 @@
 package jp.co.yumemi.android.code_check
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import android.view.inputmethod.EditorInfo
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.*
 import com.google.android.material.textfield.TextInputEditText
-import com.wada811.viewbinding.viewBinding
 import jp.co.yumemi.android.code_check.databinding.RepositoriesFragmentBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.json.JSONException
+
+object RepositoriesBindingAdapter {
+    @BindingAdapter("onEditorAction")
+    @JvmStatic
+    fun setOnInputEditorAction(view: TextInputEditText, listener: TextView.OnEditorActionListener){
+        view.setOnEditorActionListener(listener)
+    }
+
+    @BindingAdapter("divider")
+    @JvmStatic
+    fun setDivider(view: RecyclerView, dividerItemDecoration: DividerItemDecoration){
+        view.addItemDecoration(dividerItemDecoration)
+    }
+}
 
 class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
-    private val viewModel by viewModels<RepositoriesViewModel>()
-    private val adapter = RepositoryAdapter(object : RepositoryAdapter.OnItemClickListener{
-        override fun repositoryClick(repository: Repository){
-            gotoRepositoryFragment(repository)
-        }
-    })
-    private val binding:RepositoriesFragmentBinding by viewBinding()
+    private val viewModel: RepositoriesViewModel by viewModels()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
-    {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val binding = RepositoriesFragmentBinding.inflate(inflater, container, false)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
-        initViews()
+        initRepositoriesRecycler(binding)
+
+        return binding.root
     }
 
-    private fun search(searchText: String){
-        lifecycleScope.launch{
-            try {
-                val searchResults = viewModel.repositoriesSearch(searchText)
-                adapter.submitList(searchResults)
-            }catch (e: Exception){
-                showSearchError(e)
-                e.printStackTrace()
+    private fun initRepositoriesRecycler(binding: RepositoriesFragmentBinding){
+        binding.divider = DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL)
+
+        val adapter = RepositoryAdapter(object : RepositoryAdapter.OnItemClickListener{
+            override fun repositoryClick(repository: Repository){
+                gotoRepositoryFragment(repository)
             }
+        }, viewLifecycleOwner)
+        binding.adapter = adapter
+
+        viewModel.repositories.observe(viewLifecycleOwner) {
+            adapter.submitList(it)
         }
-    }
-
-    private fun initViews(){
-        with(binding){
-            initSearchInputText(searchInputText)
-            initRepositoriesRecycler(repositoriesRecycler)
-        }
-    }
-
-    private fun initSearchInputText(searchInputText: TextInputEditText){
-        searchInputText.setOnEditorActionListener{ editText, action, _ ->
-                if (action == EditorInfo.IME_ACTION_SEARCH){
-                    UtilCommon.hideSoftKeyBoard(requireContext(), editText)
-                    editText.clearFocus()
-                    val searchText = editText.text.toString()
-                    search(searchText)
-                    return@setOnEditorActionListener true
-                }
-                return@setOnEditorActionListener false
-            }
-    }
-
-    private fun initRepositoriesRecycler(repositoriesRecycler: RecyclerView){
-        val context = requireContext()
-        val layoutManager = LinearLayoutManager(context)
-        val dividerItemDecoration =
-            DividerItemDecoration(context, layoutManager.orientation)
-
-        repositoriesRecycler.let{
-            it.layoutManager = layoutManager
-            it.addItemDecoration(dividerItemDecoration)
-            it.adapter = adapter
-        }
-
-        adapter.submitList(viewModel.repositories)
-
     }
 
     fun gotoRepositoryFragment(repository: Repository)
@@ -88,21 +67,6 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         val action = RepositoriesFragmentDirections
             .actionRepositoriesFragmentToRepositoryFragment(repository)
         findNavController().navigate(action)
-    }
-
-    /** 検索エラー表示
-     * @param e 検索時に発生したException
-     */
-    private suspend fun showSearchError(e: Exception) = withContext(Dispatchers.Main){
-        when (e) {
-            is JSONException -> UtilCommon.showErrorMessage(requireContext(), "JSONパースエラー")
-            else -> UtilCommon.showErrorMessage(requireContext(), "検索エラー")
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding.repositoriesRecycler.adapter = null
     }
 }
 
