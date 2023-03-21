@@ -35,8 +35,6 @@ class RepositoriesViewModel(
         return@withContext _repositories
     }
 
-
-
     private fun resetRepositories() {
         _repositories = listOf()
     }
