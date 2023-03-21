@@ -31,7 +31,7 @@ object RepositoriesBindingAdapter {
 }
 
 class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
-    private val viewModel by viewModels<RepositoriesViewModel>()
+    private val viewModel: RepositoriesViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
