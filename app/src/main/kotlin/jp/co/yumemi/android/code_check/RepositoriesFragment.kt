@@ -6,8 +6,6 @@ package jp.co.yumemi.android.code_check
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -49,22 +47,18 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
                 adapter.submitList(searchResults)
             }catch (e: Exception){
                 when(e){
-                    is JSONException -> showErrorMessage("JSONパースエラー")
-                    else -> showErrorMessage("検索エラー")
+                    is JSONException -> UtilCommon.showErrorMessage(requireContext(), "JSONパースエラー")
+                    else -> UtilCommon.showErrorMessage(requireContext(), "検索エラー")
                 }
                 e.printStackTrace()
             }
         }
     }
 
-    private fun showErrorMessage(message: String){
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-    }
-
     private fun initSearchInputText(searchInputText: TextInputEditText){
         searchInputText.setOnEditorActionListener{ editText, action, _ ->
                 if (action == EditorInfo.IME_ACTION_SEARCH){
-                    hideSoftKeyBoard(editText)
+                    UtilCommon.hideSoftKeyBoard(requireContext(), editText)
                     editText.clearFocus()
                     val searchText = editText.text.toString()
                     search(searchText)
@@ -72,14 +66,6 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
                 }
                 return@setOnEditorActionListener false
             }
-    }
-
-    private fun hideSoftKeyBoard(currentFocus: View){
-        val inputMethodService = requireContext().getSystemService(InputMethodManager::class.java)
-        inputMethodService.hideSoftInputFromWindow(
-            currentFocus.windowToken,
-            InputMethodManager.HIDE_NOT_ALWAYS,
-        )
     }
 
     private fun initRepositoriesRecycler(repositoriesRecycler: RecyclerView){
