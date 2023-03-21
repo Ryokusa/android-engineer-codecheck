@@ -5,6 +5,7 @@ import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import java.util.*
 
 /** 汎用機能クラス
  * アプリ全体で使用する機能を持つ
@@ -12,6 +13,8 @@ import android.widget.Toast
 class UtilCommon: Application() {
 
     companion object {
+        var lastSearchDate: Date = Date()
+
         /** ソフトキーボードを非表示
          * @param context コンテキスト
          * @param currentView 現在のビュー
