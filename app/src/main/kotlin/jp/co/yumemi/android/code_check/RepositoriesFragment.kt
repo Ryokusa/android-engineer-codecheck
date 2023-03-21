@@ -30,12 +30,15 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
             gotoRepositoryFragment(repository)
         }
     })
+    private var _binding:RepositoriesFragmentBinding? = null
+    private val binding
+        get() = _binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
 
-        val binding = RepositoriesFragmentBinding.bind(view)
+        _binding = RepositoriesFragmentBinding.bind(view)
 
         adapter.submitList(viewModel.repositories)
 
@@ -105,6 +108,12 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         val action = RepositoriesFragmentDirections
             .actionRepositoriesFragmentToRepositoryFragment(repository)
         findNavController().navigate(action)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding.repositoriesRecycler.adapter = null
+        _binding = null
     }
 }
 
