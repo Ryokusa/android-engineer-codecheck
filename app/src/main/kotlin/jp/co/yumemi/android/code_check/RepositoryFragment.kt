@@ -22,7 +22,10 @@ class RepositoryFragment : Fragment(R.layout.repository_fragment) {
         Log.d("検索した日時", lastSearchDate.toString())
 
         val binding = RepositoryFragmentBinding.bind(view)
+        setRepository(binding)
+    }
 
+    private fun setRepository(binding: RepositoryFragmentBinding){
         val repository = args.repository
         binding.ownerIconView.load(repository.owner.ownerIconUrl)
         binding.nameView.text = repository.name
