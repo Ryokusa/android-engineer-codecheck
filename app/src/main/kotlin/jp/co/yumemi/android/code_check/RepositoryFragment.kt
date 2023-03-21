@@ -28,16 +28,12 @@ class RepositoryFragment : Fragment(R.layout.repository_fragment) {
 
     private val args: RepositoryFragmentArgs by navArgs()
 
-    private var _binding: RepositoryFragmentBinding? = null
-    private val binding
-        get() = checkNotNull(_binding)
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = RepositoryFragmentBinding.inflate(inflater, container, false)
+        val binding = RepositoryFragmentBinding.inflate(inflater, container, false)
         binding.repository = args.repository
         binding.lifecycleOwner = viewLifecycleOwner
 
