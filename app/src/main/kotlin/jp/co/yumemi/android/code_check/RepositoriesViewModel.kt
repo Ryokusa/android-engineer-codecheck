@@ -51,7 +51,7 @@ class RepositoriesViewModel(
 
         try {
             val jsonBody = JSONObject(response.receive<String>())
-            return jsonBody2Repositories(jsonBody)
+            return Repository.jsonBody2Repositories(jsonBody)
         }catch (e: Exception){
             throw JSONException("json parse error")
         }
@@ -61,42 +61,5 @@ class RepositoriesViewModel(
     fun resetRepositories() {
         _repositories = listOf()
     }
-
-
-    private fun jsonBody2Repositories(jsonBody: JSONObject):List<Repository>  {
-        val jsonRepositories = jsonBody.optJSONArray("items") ?: throw JSONException("'items' can't get from json")
-
-        val repositories = mutableListOf<Repository>()
-        for (i in 0 until jsonRepositories.length()) {
-            val jsonRepository = jsonRepositories.optJSONObject(i)
-            val repository = jsonObject2Repository(jsonRepository)
-            repositories.add(repository)
-        }
-
-        return repositories.toList()
-    }
-
-    private fun jsonObject2Repository(jsonRepository: JSONObject): Repository {
-        val json = Json { ignoreUnknownKeys = true }
-
-         return json.decodeFromString(jsonRepository.toString())
-    }
 }
 
-@Parcelize
-@kotlinx.serialization.Serializable
-data class Repository(
-    @SerialName("full_name") val name: String,
-    @SerialName("owner") val owner: Owner,
-    @SerialName("language") val language: String?="",
-    @SerialName("stargazers_count") val stargazersCount: Long,
-    @SerialName("watchers_count")val watchersCount: Long,
-    @SerialName("forks_count") val forksCount: Long,
-    @SerialName("open_issues_count") val openIssuesCount: Long,
-) : Parcelable
-
-@Parcelize
-@kotlinx.serialization.Serializable
-data class Owner(
-    @SerialName("avatar_url") val ownerIconUrl: String
-) :Parcelable
