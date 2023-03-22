@@ -7,12 +7,6 @@
         <variable
             name="viewModel"
             type="jp.co.yumemi.android.code_check.RepositoriesViewModel" />
-        <variable
-            name="adapter"
-            type="jp.co.yumemi.android.code_check.RepositoryAdapter" />
-        <variable
-            name="divider"
-            type="androidx.recyclerview.widget.DividerItemDecoration" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -69,8 +63,6 @@
             android:id="@+id/repositories_recycler"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:adapter="@{adapter}"
-            app:divider="@{divider}"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
