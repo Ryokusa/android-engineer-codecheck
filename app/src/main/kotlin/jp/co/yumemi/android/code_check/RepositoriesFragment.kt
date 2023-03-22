@@ -27,16 +27,6 @@ object RepositoriesBindingAdapter {
     fun setOnInputEditorAction(view: TextInputEditText, listener: TextView.OnEditorActionListener){
         view.setOnEditorActionListener(listener)
     }
-
-    /** RepositoriesRecyclerのdividerを設定するBindingAdapter
-     * @param view 検索欄のビュー
-     * @param dividerItemDecoration ディバイダー
-     */
-    @BindingAdapter("divider")
-    @JvmStatic
-    fun setDivider(view: RecyclerView, dividerItemDecoration: DividerItemDecoration){
-        view.addItemDecoration(dividerItemDecoration)
-    }
 }
 
 class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
@@ -51,24 +41,28 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        initRepositoriesRecycler(binding)
+        initRepositoriesRecycler(binding.repositoriesRecycler)
 
         return binding.root
     }
 
     /** リサイクラービュー初期化
      * dataBindingにdividerとadapterをセット＆検索結果リポジトリ自動更新設定
-     * @param binding データバインディング用
+     * @param repositoryRecycler 初期化したいリポジトリリサイクラービュー
      */
-    private fun initRepositoriesRecycler(binding: RepositoriesFragmentBinding){
-        binding.divider = DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL)
+    private fun initRepositoriesRecycler(repositoryRecycler: RecyclerView){
+        val context = requireContext()
+        val layoutManager = LinearLayoutManager(context)
+        val divider = DividerItemDecoration(context, layoutManager.orientation)
+        repositoryRecycler.layoutManager = layoutManager
+        repositoryRecycler.addItemDecoration(divider)
 
         val adapter = RepositoryAdapter(object : RepositoryAdapter.OnItemClickListener{
             override fun repositoryClick(repository: Repository){
                 gotoRepositoryFragment(repository)
             }
         }, viewLifecycleOwner)
-        binding.adapter = adapter
+        repositoryRecycler.adapter = adapter
 
         viewModel.repositories.observe(viewLifecycleOwner) {
             adapter.submitList(it)
@@ -78,7 +72,6 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     /** リポジトリ画面へ遷移
      * @param repository 遷移先に送るリポジトリ情報
      */
-
     fun gotoRepositoryFragment(repository: Repository)
     {
         val action = RepositoriesFragmentDirections
