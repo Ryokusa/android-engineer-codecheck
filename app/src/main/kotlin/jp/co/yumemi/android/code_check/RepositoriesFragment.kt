@@ -17,12 +17,21 @@ import com.google.android.material.textfield.TextInputEditText
 import jp.co.yumemi.android.code_check.databinding.RepositoriesFragmentBinding
 
 object RepositoriesBindingAdapter {
+
+    /** 検索ビューのEditorActionListenerを設定するBindingAdapter
+     * @param view 検索欄のビュー
+     * @param listener OnEditorActionListener
+     */
     @BindingAdapter("onEditorAction")
     @JvmStatic
     fun setOnInputEditorAction(view: TextInputEditText, listener: TextView.OnEditorActionListener){
         view.setOnEditorActionListener(listener)
     }
 
+    /** RepositoriesRecyclerのdividerを設定するBindingAdapter
+     * @param view 検索欄のビュー
+     * @param dividerItemDecoration ディバイダー
+     */
     @BindingAdapter("divider")
     @JvmStatic
     fun setDivider(view: RecyclerView, dividerItemDecoration: DividerItemDecoration){
@@ -47,6 +56,10 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
         return binding.root
     }
 
+    /** リサイクラービュー初期化
+     * dataBindingにdividerとadapterをセット＆検索結果リポジトリ自動更新設定
+     * @param binding データバインディング用
+     */
     private fun initRepositoriesRecycler(binding: RepositoriesFragmentBinding){
         binding.divider = DividerItemDecoration(context, DividerItemDecoration.HORIZONTAL)
 
@@ -61,6 +74,10 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
             adapter.submitList(it)
         }
     }
+
+    /** リポジトリ画面へ遷移
+     * @param repository 遷移先に送るリポジトリ情報
+     */
 
     fun gotoRepositoryFragment(repository: Repository)
     {

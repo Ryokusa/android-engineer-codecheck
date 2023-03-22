@@ -12,12 +12,12 @@
 
 ### 環境
 
-- IDE：Android Studio Arctic Fox | 2020.3.1 Patch 1
-- Kotlin：1.5.31
+- IDE：Android Studio Electric Eel | 2022.1.1 Patch 2
+- Kotlin：1.8.0
 - Java：11
-- Gradle：7.0.1
+- Gradle：7.4.2
 - minSdk：23
-- targetSdk：31
+- targetSdk：33
 
 ※ ライブラリの利用はオープンソースのものに限ります。
 

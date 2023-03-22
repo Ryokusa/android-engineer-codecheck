@@ -9,6 +9,10 @@ import kotlinx.serialization.json.Json
 import org.json.JSONException
 import org.json.JSONObject
 
+/** リポジトリ
+ * リポジトリ情報が入ったクラス
+ * jsonから変換する関数を含む
+ */
 @Parcelize
 @Serializable
 data class Repository(
@@ -21,6 +25,11 @@ data class Repository(
     @SerialName("open_issues_count") val openIssuesCount: Long,
 ) : Parcelable {
     companion object{
+        /** Jsonからリポジトリリストへ変換
+         * @param jsonBody JSONObject形式のリポジトリJSON配列
+         * @return リポジトリリスト
+         * @throws JSONException JSONパースエラー
+         */
         fun jsonBody2Repositories(jsonBody: JSONObject):List<Repository>  {
             val jsonRepositories = jsonBody.optJSONArray("items") ?: throw JSONException("'items' can't get from json")
 
@@ -34,14 +43,27 @@ data class Repository(
             return repositories.toList()
         }
 
+        /** JsonからRepositoryへ変換
+         * @param jsonRepository JSONObject形式のリポジトリJson
+         * @return 変換したRepository
+         * @throws JSONException JSONパースエラー
+         */
         private fun jsonObject2Repository(jsonRepository: JSONObject): Repository {
             val json = Json { ignoreUnknownKeys = true }
 
-            return json.decodeFromString(jsonRepository.toString())
+            try {
+                return json.decodeFromString(jsonRepository.toString())
+            }catch (e: Exception){
+                throw JSONException("json parse error")
+            }
+
         }
     }
 }
 
+/** リポジトリオーナー
+ * リポジトリのオーナー情報をもったクラス
+ */
 @Parcelize
 @Serializable
 data class Owner(

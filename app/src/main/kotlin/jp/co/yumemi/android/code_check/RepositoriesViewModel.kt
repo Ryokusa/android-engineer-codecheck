@@ -34,7 +34,10 @@ class RepositoriesViewModel(
     }
 
     /** リポジトリ検索
+     * 検索成功時は RepositoriesViewModel.repositories に非同期で検索結果が入る
      * 検索失敗時はリポジトリを空にし、エラートーストを表示
+     * @throws JSONException Jsonパースエラー
+     * @throws Exception その他通信等エラー
      */
     private fun searchRepositories() {
         viewModelScope.launch{
@@ -51,6 +54,9 @@ class RepositoriesViewModel(
         }
     }
 
+    /** リポジトリ初期化
+     * 検索結果リポジトリを空のlistにする
+     */
     private fun resetRepositories() {
         repositories.value = listOf()
     }
