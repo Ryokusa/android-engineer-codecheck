@@ -72,7 +72,6 @@ class RepositoriesFragment: Fragment(R.layout.repositories_fragment){
     /** リポジトリ画面へ遷移
      * @param repository 遷移先に送るリポジトリ情報
      */
-
     fun gotoRepositoryFragment(repository: Repository)
     {
         val action = RepositoriesFragmentDirections
