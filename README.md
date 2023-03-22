@@ -26,3 +26,13 @@
 1. 何かしらのキーワードを入力
 2. GitHub API（`search/repositories`）でリポジトリを検索し、結果一覧を概要（リポジトリ名）で表示
 3. 特定の結果を選択したら、該当リポジトリの詳細（リポジトリ名、オーナーアイコン、プロジェクト言語、Star 数、Watcher 数、Fork 数、Issue 数）を表示
+
+## 開発時の注意事項
+
+### gitフローについて
+
+[GitFlow](https://docs.github.com/ja/get-started/quickstart/github-flow)に準拠
+
+### コミットについて
+
+[ConvertionalCommits](https://www.conventionalcommits.org/ja/v1.0.0/)に準拠  
