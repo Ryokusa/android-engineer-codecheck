@@ -33,4 +33,4 @@
 
 ### コミットについて
 
-[ConvertionalCommits](https://www.conventionalcommits.org/ja/v1.0.0/)に準拠  
+[ConventionalCommits](https://www.conventionalcommits.org/ja/v1.0.0/)に準拠  
