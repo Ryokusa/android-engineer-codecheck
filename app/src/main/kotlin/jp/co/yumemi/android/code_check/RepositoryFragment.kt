@@ -12,6 +12,7 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import coil.load
 import jp.co.yumemi.android.code_check.UtilCommon.Companion.lastSearchDate
 import jp.co.yumemi.android.code_check.databinding.RepositoryFragmentBinding
@@ -20,7 +21,9 @@ object RepositoryBindingAdapter{
     @BindingAdapter("imageUrl")
     @JvmStatic
     fun loadImage(view: ImageView, imageUrl: String){
-        view.load(imageUrl)
+        view.load(imageUrl){
+            placeholder(CircularProgressDrawable(view.context))
+        }
     }
 }
 

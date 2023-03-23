@@ -58,6 +58,7 @@ dependencies {
     implementation 'io.ktor:ktor-client-android:1.6.4'
 
     implementation 'io.coil-kt:coil:2.2.2'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
 
