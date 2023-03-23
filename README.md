@@ -8,8 +8,6 @@
 
 本アプリは GitHub のリポジトリを検索するアプリです。
 
-<img src="docs/app.gif" width="320">
-
 ### 環境
 
 - IDE：Android Studio Electric Eel | 2022.1.1 Patch 2
