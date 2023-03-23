@@ -38,7 +38,7 @@ class GithubClient {
         }
 
         try {
-            val jsonBody = JSONObject(response.receive<String>())
+            val jsonBody = JSONObject(response.body<String>())
             return@withContext Repository.jsonBody2Repositories(jsonBody)
         }catch (e: Exception){
             throw JSONException("json parse error")

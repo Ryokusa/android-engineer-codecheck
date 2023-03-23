@@ -7,4 +7,8 @@
     <string name="forks">%d forks</string>
     <string name="open_issues">%d open issues</string>
     <string name="nothing_language">使用言語なし</string>
+
+    <string name="error">エラー</string>
+    <string name="search_error_occurred">検索中にエラーが発生しました</string>
+    <string name="json_parse_error_occurred">JSONパース中にエラーが発生しました</string>
 </resources>
