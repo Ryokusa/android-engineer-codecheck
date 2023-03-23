@@ -72,7 +72,7 @@ class RepositoriesViewModel(
         var errMessage = context.getString(R.string.error) + ": "
         errMessage += when (e) {
             is JSONException -> context.getString(R.string.json_parse_error_occurred)
-            else -> context.getString(R.string.json_parse_error_occurred)
+            else -> context.getString(R.string.search_error_occurred)
         }
         UtilCommon.showErrorMessage(context, errMessage)
     }
