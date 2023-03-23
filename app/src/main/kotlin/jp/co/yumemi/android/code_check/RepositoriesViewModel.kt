@@ -70,10 +70,11 @@ class RepositoriesViewModel(
      */
     private suspend fun showSearchError(e: Exception) = withContext(Dispatchers.Main){
         var errMessage = context.getString(R.string.error) + ": "
-        when (e) {
-            is JSONException -> errMessage += context.getString(R.string.json_parse_error_occurred)
-            else -> errMessage += context.getString(R.string.json_parse_error_occurred)
+        errMessage += when (e) {
+            is JSONException -> context.getString(R.string.json_parse_error_occurred)
+            else -> context.getString(R.string.json_parse_error_occurred)
         }
+        UtilCommon.showErrorMessage(context, errMessage)
     }
 }
 
