@@ -69,9 +69,10 @@ class RepositoriesViewModel(
      * @param e 検索時に発生したException
      */
     private suspend fun showSearchError(e: Exception) = withContext(Dispatchers.Main){
+        var errMessage = context.getString(R.string.error) + ": "
         when (e) {
-            is JSONException -> UtilCommon.showErrorMessage(context, "JSONパースエラー")
-            else -> UtilCommon.showErrorMessage(context, "検索エラー")
+            is JSONException -> errMessage += context.getString(R.string.json_parse_error_occurred)
+            else -> errMessage += context.getString(R.string.json_parse_error_occurred)
         }
     }
 }
