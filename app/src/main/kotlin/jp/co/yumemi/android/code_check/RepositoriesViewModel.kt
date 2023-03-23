@@ -22,6 +22,7 @@ class RepositoriesViewModel(
 
     val repositories = MutableLiveData<List<Repository>>()
     val searchText = MutableLiveData("")
+    val searching = MutableLiveData(false)
 
     val onEditorAction = OnEditorActionListener{editText, action, _ ->
         if (action == EditorInfo.IME_ACTION_SEARCH){
@@ -41,6 +42,7 @@ class RepositoriesViewModel(
      */
     private fun searchRepositories() {
         viewModelScope.launch{
+            searching.value = true
             lastSearchDate = Date()
             resetRepositories()
 
@@ -51,6 +53,8 @@ class RepositoriesViewModel(
                 showSearchError(e)
                 e.printStackTrace()
             }
+
+            searching.value = false
         }
     }
 
